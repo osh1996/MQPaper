@@ -1,0 +1,115 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.1.26)  28 JAN 2018 15:17
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**main.tex
+(./main.tex
+LaTeX2e <2017-04-15>
+Babel <3.12> and hyphenation patterns for 26 language(s) loaded.
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2017/06/24 v1.0g Graphics/color driver for pdftex
+)
+(/usr/share/texlive/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
+
+(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
+Package: array 2016/10/06 v2.4d Tabular extension package (FMi)
+\col@sep=\dimen103
+\extrarowheight=\dimen104
+\NC@list=\toks14
+\extratabsurround=\skip43
+\backup@length=\skip44
+)
+\everycr=\toks15
+\minrowclearance=\skip45
+)
+\rownum=\count87
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
+)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count88
+\Gm@cntv=\count89
+\c@Gm@tempcnt=\count90
+\Gm@bindingoffset=\dimen105
+\Gm@wd@mp=\dimen106
+\Gm@odd@mp=\dimen107
+\Gm@even@mp=\dimen108
+\Gm@layoutwidth=\dimen109
+\Gm@layoutheight=\dimen110
+\Gm@layouthoffset=\dimen111
+\Gm@layoutvoffset=\dimen112
+\Gm@dimlist=\toks17
+)
+
+! LaTeX Error: File `minted.sty' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: sty)
+
+Enter file name: 
+! Emergency stop.
+<read *> 
+         
+l.8 \usepackage
+               {mdwlist}^^M
+*** (cannot \read from terminal in nonstop modes)
+
+ 
+Here is how much of TeX's memory you used:
+ 1433 strings out of 494414
+ 18223 string characters out of 6169784
+ 78995 words of memory out of 5000000
+ 4943 multiletter control sequences out of 15000+600000
+ 3938 words of font info for 15 fonts, out of 8000000 for 9000
+ 264 hyphenation exceptions out of 8191
+ 41i,0n,35p,212b,36s stack positions out of 5000i,500n,10000p,200000b,80000s
+!  ==> Fatal error occurred, no output PDF file produced!

@@ -1,0 +1,34 @@
+\section{Testing and Validation}
+\subsection{Control Board}
+The control board consists of many different components that need to be tested, both individually and as a system. A series of tests will be run on each component to ensure that it is functioning properly and as intended. 
+\subsection{Joint Functionality}
+
+Joints can do several things:
+\begin{itemize}
+
+
+	\item Accept commands for motor output values and act on them
+    \item Keep track of the motor's position (using a potentimeter as a reference point and an encoder to follow changes) and report the position when asked
+    \item Measure (indirectly) the torque on the motor using a Current Sense circuit, and report the torque when it's requested
+    \newline
+    \newline
+    Acceptance testing of this subsystem will be performed manually as a part of routine maintenance.
+    \item To verify that the motor properly responds to input, a diagnostic program will be written that will power the (disconnected) for short intervals in each direction. This test will not guarantee that the motor responds linearly to input, but it will ensure that the motor receives power and properly parses speed and direction information.
+    \newline
+	\item To make sure position tracking works, the motor subassembly board will utilize the fact that it has two methods of measuring its position: the encoder and the potentiometer. The test program will start by recording the current encoder and potentiometer values. It will then tell the motor to turn for a small amount of time, and the program will verify that the two values both changed. If either value does not change, there is a problem somewhere on the board. Once it has been verified that arm telemetry returns sensible values, the program will begin verifying that the potentiometer and encoder readings agree with one another. The two values should change similarly to one another, possibly with an offset and a scaling constant added in to the calculation. Several data points will be required to determine exactly what these constants should be, so the arm will turn again to sample more points. When the proper offset has been determined, the program will check that the scale value is within an acceptable range. If one of the readings changes significantly faster than the other, that is another indication that there is a problem with the board.
+    \newline
+    \item To verify the proper functionality of the torque sensor, the motor will be mechanically prevented from turning at the same time as the electronics command the motor to turn. If no torque is recorded, the test will stop to prevent damage to the motor. Otherwise, the command sent to the motor will steadily and quickly increase until the measured torque matches a reasonable percentage of the total maximum torque that the motor will be expected to produce. This test should also be run quickly to prolong the lifetime of the motor.
+\end{itemize}
+
+\subsection{Connector Functionality}
+The job of the connector is to transmit power and data. It must also identify itself so that it can report its length to the control board. As the links are not meant to be overly intelligent, minimal testing will be required. 
+
+*Verify that input wires connect to output wires
+*Verify that the link properly identifies itself by length
+\subsection{Software}
+The software needs to be able to send commands to the arm and report the arm's current pose to the user. Its functionality can be validated by sending positions to an arm. The user will need to verify that the arm actually goes to those positions. The user will then move the arm, and verify that the program correctly displays the new arm's pose.
+\subsection{Arm Functionality}
+The performance of the arm can be validated based on a number of metrics. First, integration testing should be performed where several links are connected to each other and the arm is told to move to some setpoints. Upon passing the basic set of constraints, more nuanced tests can be performed.
+\newline * Precision testing: The arm will be told to move to a setpoint. A mechanical displacement sensor will be set up so that its measurement surface touches the end of the arm's tool. The arm will move away from the displacement sensor, and it will then try to return to its previous setpoint. Acceptance will be based on the arm consistently being able to touch the end of the displacement sensor with as little over- or under-shoot as possible.
+\newline
+\newline * Path testing: The end effector of the arm will be set to the capacitive touch ending so that the arm will be able to interrat with touch screen devices. A touch screen device will be set up with a program that records the location of touches. The arm will need to trace a specific pattern on the screen. Acceptance will be based on the pattern being traced with minimal deviation from the expected.

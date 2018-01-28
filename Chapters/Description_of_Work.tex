@@ -1,0 +1,15 @@
+\section{Description of Work}
+% Section outline
+% Overall summary of section - ~1 sentence per major topic
+% ~1 Paragraph for each major topic
+
+% What work is there to be done?
+There are many different ways to accomplish the goals we set. We decided to discretize common robot arm configurations into smart joints and their connectors, a base, and end of arm tooling.  Each joint will have a motor/servo actuating it and its own control board with various sensors used to control the actuation.  We also plan to control the end of arm tooling using another joint control board.  \\
+\newline
+Each joint control board allows joints to connect to the main communications bus running through the system and control the motor/servo on the joint. This board will have all of the necessary components for controlling one motor and communicating to the main controller. The main controller will act as an interface between the computer that is performing all of the complex calculations and the Joints that are controlling their positions. \\
+\newline
+To exemplify the modularity of our controls system and the interchangeability of our arm we are going to be adding a link onto the existing 3001 arm. By doing this, we will show how our control system can adapt to a variable arm configurations. By taking an already existing arm and modifying it, then applying our control system, we prove that our system can be used to modify most arms that conform to the specs of our system.  \\
+\newline
+We will develop a software application for controlling the arm with a GUI. This software will have a simple control interface for moving the arm, and some configurable settings to act as inputs for the kinematics equations. In addition to this we will develop a code library which will serve as an interface for the end user for use in their own code. \\
+\newline
+In order to verify that each of these systems is functioning as expected, we will also design a series of tests to perform on them. Tests will be performed and documented for each subsystem and the entire system as a whole.
