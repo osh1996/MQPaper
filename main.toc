@@ -1,0 +1,25 @@
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
+\contentsline {section}{\numberline {2}Background}{1}{section.2}
+\contentsline {subsection}{\numberline {2.1}Robot Arms Currently in Use}{1}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}ABB Robotics}{2}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Universal Robots}{2}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}KUKA AG}{2}{subsubsection.2.1.3}
+\contentsline {subsection}{\numberline {2.2}Small Industrial Robotic Arm Comparison}{2}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Modular Arms}{3}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}igus Robolink}{3}{subsubsection.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Reconfigurable Modular Manipulator}{4}{subsubsection.2.3.2}
+\contentsline {subsubsection}{\numberline {2.3.3}Modular Robotic Arm}{4}{subsubsection.2.3.3}
+\contentsline {subsection}{\numberline {2.4}Our Robotic Arm System}{4}{subsection.2.4}
+\contentsline {section}{\numberline {3}Description of Work}{4}{section.3}
+\contentsline {section}{\numberline {4}Capstone Design Requirements}{5}{section.4}
+\contentsline {subsection}{\numberline {4.1}Computer Science}{6}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Electrical and Computer Engineering}{6}{subsection.4.2}
+\contentsline {section}{\numberline {5}Constraints}{6}{section.5}
+\contentsline {section}{\numberline {6}Acceptance Criteria}{7}{section.6}
+\contentsline {subsection}{\numberline {6.1}Joint Board}{7}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Modify RBE3001 Arm}{7}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}End Effector}{7}{subsection.6.3}
+\contentsline {subsection}{\numberline {6.4}Base}{8}{subsection.6.4}
+\contentsline {subsection}{\numberline {6.5}Software Application}{8}{subsection.6.5}
+\contentsline {subsection}{\numberline {6.6}Code Library}{8}{subsection.6.6}
+\contentsline {section}{Appendix \numberline {A}Gantt Chart}{10}{Appendix.a.A}
