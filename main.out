@@ -22,4 +22,10 @@
 \BOOKMARK [2][-]{subsection.6.4}{6.4 Base}{section.6}% 22
 \BOOKMARK [2][-]{subsection.6.5}{6.5 Software Application}{section.6}% 23
 \BOOKMARK [2][-]{subsection.6.6}{6.6 Code Library}{section.6}% 24
-\BOOKMARK [1][-]{Appendix.a.A}{Appendix A Gantt Chart}{}% 25
+\BOOKMARK [1][-]{section.7}{7 Testing}{}% 25
+\BOOKMARK [2][-]{subsection.7.1}{7.1 DRV8872}{section.7}% 26
+\BOOKMARK [2][-]{subsection.7.2}{7.2 Hall Effect Current Sensor}{section.7}% 27
+\BOOKMARK [2][-]{subsection.7.3}{7.3 DC Motor}{section.7}% 28
+\BOOKMARK [2][-]{subsection.7.4}{7.4 TM4C123}{section.7}% 29
+\BOOKMARK [2][-]{subsection.7.5}{7.5 Hall Effect Encoder}{section.7}% 30
+\BOOKMARK [1][-]{Appendix.a.A}{Appendix A Gantt Chart}{}% 31

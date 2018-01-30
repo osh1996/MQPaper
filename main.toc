@@ -22,4 +22,10 @@
 \contentsline {subsection}{\numberline {6.4}Base}{8}{subsection.6.4}
 \contentsline {subsection}{\numberline {6.5}Software Application}{8}{subsection.6.5}
 \contentsline {subsection}{\numberline {6.6}Code Library}{8}{subsection.6.6}
-\contentsline {section}{Appendix \numberline {A}Gantt Chart}{10}{Appendix.a.A}
+\contentsline {section}{\numberline {7}Testing}{9}{section.7}
+\contentsline {subsection}{\numberline {7.1}DRV8872}{9}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Hall Effect Current Sensor}{9}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}DC Motor}{9}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.4}TM4C123}{9}{subsection.7.4}
+\contentsline {subsection}{\numberline {7.5}Hall Effect Encoder}{9}{subsection.7.5}
+\contentsline {section}{Appendix \numberline {A}Gantt Chart}{11}{Appendix.a.A}
