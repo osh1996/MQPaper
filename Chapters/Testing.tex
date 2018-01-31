@@ -1,7 +1,21 @@
 \section{Testing}
-\subsection{DRV8872}
+\subsection{Motor Driver}
+The DC motor driver selected was the DRV8872. This driver takes in two inputs, in1 and in2, which affect the output much like inputs to an H-bridge.The exception is when both inputs are high. In this case, the inputs are pulled together as a motor break.
+
+To measure the speed of the motor, a servo horn with 6 spokes was attached and a beam break sensor was mounted on the motor with the spoke traveling through the beam. The signal line of the beam break sensor was connected to an Arduino that measured the frequency by incrementing a count in an interrupt triggered on a pin change. The ISR just incremented a count that was printed out and reset every 5 seconds. Some issues arose with this system, however, since there was a small amount of bouncing on the rising and falling edges, leading to multiple readings for each beam break. This was solved by placing a 10nF capacitor from the signal line to ground. Since this number was triggered 12 times per revolution and printed out every 5 seconds, the actual printed value happened to be in revolutions per minute.
+%insert a figure of the encoder setup
+
+During initial testing, the motor driver was wired up with $V_m$ of 8.4V, logic voltage of 5V, a 10k$\Omega$ pull up resistor on nFault, Isen grounded, and the motor outputs connected to a DC motor. During this test, one of the inputs was connected to an Arduino Uno, outputting a constant PWM wave using the analogWrite function with a duty cycle of approximately 50\%. The motor turned, but very slowly and with a high pitched whine. When a 100$\mu$F capacitor was placed from $V_m$ to ground, the motor spun up to full speed and the whining sound went away.
+
+Further testing revealed a strange behavior when increasing the frequency of the input PWM signal. The motor spun normally at low frequencies of around 500Hz, but at around 1kHz the motor started slowing down and making a whining sound. The problem worsened with increasing frequency. Eventually, this problem was fixed by using a power supply that could output 3A and adding capacitors from in1 and in2 to ground. 
+
+Next, in order to determine whether the performance of the motor driver was dependent on input frequency or other factors, the input frequency was increase again from 200Hz to 20kHz. This time, the motor performed much better. The RPM actually increased with an increase in frequency, as can be seen in Table .
+%insert table of input frequency vs motor rpm
 \subsection{Hall Effect Current Sensor}
 \subsection{DC Motor}
 \subsection{TM4C123}
+Several peripherals were needed to achieve the desired functionality from our microcontroller. A test board was set up in order to test and verify that each of these peripherals was setup properly and working as expected. The test board consisted of a potentiometer connected to an ADC pin, an SPI controlled ADC (MCP3202), the 1:2 demultiplexer (SN74...), CAN transceiver (TN332?), and some LEDs.
+
+The potentiometer was connected to PB? which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. 
 \subsection{Hall Effect Encoder}
 
