@@ -41,9 +41,9 @@ K5 sixx R650 & 650 & 5 & 127 & 6 \\
 While there are many industrial arms in production, there are very few modular robotic arms. There is one commercially available robotic arm, the Robolink, made by igus. A few modular robot arms have been developed, including the reconfigurable modular manipulator (RMM), made by TRACLabs \cite{RMM}, and a single joint for the Modular Robotic Arm project MQP at WPI \cite{MRA}.
 
 \subsubsection{igus Robolink} 
-Robolink is a modular robotic arm kit produced by the plastics manufacturing company igus. The kit contains parts to make an arm that is up to 6 Degrees of Freedom (DOF), with belt driven linkages powered by stepper motors that reside in the base of the robot. Robolink offers 7 individual links, ranging from 1-2 DOF and differing based upon their kind of motion (pivoting, rotating, swiveling). Each link is made of a lightweight and strong plastic or carbon fiber with cables inlaid in them, resulting in a low cost and weight arm. The cables used to control these links are made of a high strength synthetic fiber with has a tensile strength of 4,000N. Separating the actuation of each link from the joint allows the arms to be easily maneuverable with its lightweight and strong joints. \\
-\newline
-Purchasers of the kit are able to combine the links in different ways, allowing for a flexible, modular solution to robotic arms. Igus also offers their Robolink software for programming articulated arms that facilitates the programming of individual arms through the use of a simple, intuitive control software. The total cost of a kit to make a 6 DOF arm is \$6000, and buying individual links will cost anywhere from \$370 to \$750 per link. While this price may be low cost compared to other arms such as the ABB robotic arm which can cost up to \$200,000 in total, it is still not low enough for either hobbyists or people interested in learning about robotic arms but prevented from doing so by the high entry cost. In addition to this, the belt system actuating each link requires the user to thread belts attached to the actuators to each link in order to set up the robot. The long assembly time and intricacy also detracts from the idea of a modularity because the time involved in switching configurations can inhibit users from really exploring the different workspaces and combinations this kit can create \cite{igus}. 
+Robolink is a modular robotic arm kit produced by the plastics manufacturing company igus. The kit contains parts to make an arm that is up to 6 Degrees of Freedom (DOF), with belt driven linkages powered by stepper motors that reside in the base of the robot. Robolink offers 7 individual links, ranging from 1-2 DOF and differing based upon their kind of motion (pivoting, rotating, swiveling). Each link is made of a lightweight and strong plastic or carbon fiber with cables inlaid in them, resulting in a low cost and weight arm. The cables used to control these links are made of a high strength synthetic fiber with has a tensile strength of 4,000N. Separating the actuation of each link from the joint allows the arms to be easily maneuverable with its lightweight and strong joints.
+
+\noindent Purchasers of the kit are able to combine the links in different ways, allowing for a flexible, modular solution to robotic arms. Igus also offers their Robolink software for programming articulated arms that facilitates the programming of individual arms through the use of a simple, intuitive control software. The total cost of a kit to make a 6 DOF arm is \$6000, and buying individual links will cost anywhere from \$370 to \$750 per link. While this price may be low cost compared to other arms such as the ABB robotic arm which can cost up to \$200,000 in total, it is still not low enough for either hobbyists or people interested in learning about robotic arms but prevented from doing so by the high entry cost. In addition to this, the belt system actuating each link requires the user to thread belts attached to the actuators to each link in order to set up the robot. The long assembly time and intricacy also detracts from the idea of a modularity because the time involved in switching configurations can inhibit users from really exploring the different workspaces and combinations this kit can create \cite{igus}. 
 
 \subsubsection{Reconfigurable Modular Manipulator}
 The reconfigurable modular manipulator developed by TRACLabs for NASA is a fully modular 7-DOF robot arm. Each joint and end effector have the same connector that provides power and control lines throughout the arm. Internal power and control circuitry take in these lines and convert them into movement. Joints can be swapped out by hand in a matter of seconds. Joints accept position or velocity data from the central communication lines and store physical characteristics about the joints in memory. This robot arm is not commercially available \cite{RMM}.
@@ -55,23 +55,23 @@ This project aimed to close the market gap between inexpensive toy robot arms an
 Our modular robotic arm kit aims to offer a completely different experience compared to existing products and projects. The system maintains a low cost while providing a versatile platform for beginner engineers or rapid prototyping professionals. This is achieved by avoiding expensive proprietary software and subtractive manufacturing; favoring off-the-shelf parts, 3D-printed structures, and freely available software. Providing custom-built software for controlling the arm creates a plug-and-play environment suitable for most any skill level.
 
 
-% \subsection{Communications}
-% We looked at several types of communications for the purposes of controlling our robotic arm. These include serial UART, SPI, I2C, and CAN. 
-% \subsubsection{Controller Area Network}
-% A controller area network (CAN) is a system for sending data reliably between distinct subsystems with reasonably low danger of transmission errors. CAN buses are widely used in the automotive industry to allow various computerized parts of the car to talk to one another.
+\subsection{Communications}
+We looked at several types of communications for the purposes of controlling our robotic arm. These include serial UART, SPI, I2C, and CAN. 
+\subsubsection{Controller Area Network}
+A controller area network (CAN) is a system for sending data reliably between distinct subsystems with reasonably low danger of transmission errors. CAN buses are widely used in the automotive industry to allow various computerized parts of the car to talk to one another.
 
-% % Research begins here?
-% \subsection{Control board}
-% We decided to use a control board that consists of a microcontroller, analog-to-digital converter, quadrature encoder counter, motor driver, current sensor, CAN controller, and CAN transceiver. These devices will allow each control board to control one motor. \\
-% \newline
-% Current sensing can be done in multiple ways. The most common way is by using a small resistor in series with the motor and amplifying the voltage across this resistor. This method can cause lots of noise in the system and takes some power from the motor to use. As the value of resistor used increases, so does the power taken from the motor. However, this also causes a larger voltage across the resistor, meaning less amplification is needed and reducing the output noise. \\
-% \newline
-% Other methods of current sensing include hall effect sensors. These sensors measure current non-intrusively by using the motor current to induce a small voltage in a conductor, then amplifying that small voltage and outputting it. The insertion loss caused by these sensors is very small. Since these sensors measure current by induction, they can only measure current in a specific frequency band. Most of these frequencies are DC to some upper limit determined by the physical characteristics of the sensor, usually around 100kHz.
+% Research begins here?
+\subsection{Control board}
+We decided to use a control board that consists of a microcontroller, analog-to-digital converter, quadrature encoder counter, motor driver, current sensor, CAN controller, and CAN transceiver. These devices will allow each control board to control one motor.
 
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=\textwidth]{Detailed_Block_Diagram}
-% \caption{Functional block diagram of the system}
-% \label{fig:Functional_Block_Diagram}
-% \end{figure}
+\noindent Current sensing can be done in multiple ways. The most common way is by using a small resistor in series with the motor and amplifying the voltage across this resistor. This method can cause lots of noise in the system and takes some power from the motor to use. As the value of resistor used increases, so does the power taken from the motor. However, this also causes a larger voltage across the resistor, meaning less amplification is needed and reducing the output noise.
+
+\noindent Other methods of current sensing include hall effect sensors. These sensors measure current non-intrusively by using the motor current to induce a small voltage in a conductor, then amplifying that small voltage and outputting it. The insertion loss caused by these sensors is very small. Since these sensors measure current by induction, they can only measure current in a specific frequency band. Most of these frequencies are DC to some upper limit determined by the physical characteristics of the sensor, usually around 100kHz.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{Gantt_Control_Board}
+\caption{Functional block diagram of the system}
+\label{fig:Functional_Block_Diagram}
+\end{figure}
 
