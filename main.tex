@@ -1,6 +1,6 @@
 \documentclass[letterpaper,12pt,titlepage]{article}
 
-\title{MQP PDR Document}
+\title{MQP Report}
 
 \usepackage[table]{xcolor}
 \usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
@@ -15,6 +15,7 @@
 \usepackage{mathcomp}
 \usepackage{graphicx}
 \usepackage{cite}
+\usepackage[nomessages]{fp}
 % \usepackage[sorting=nyt,firstinits=true]{biblatex}
 \graphicspath{{./Pictures/}}
 
@@ -23,7 +24,7 @@
     pdftitle={},
     pdfauthor={},
     pdfsubject={},
-    pdfkeywords={ECE, WPI, Electrical Engineering},
+    pdfkeywords={},
     bookmarksnumbered=true,     
     bookmarksopen=true,         
     bookmarksopenlevel=1,       
@@ -62,7 +63,7 @@
 \\ 
 \vspace*{1cm}
 	\Huge
-	\textbf{Major Qualifying Project Proposal}\\
+	\textbf{Major Qualifying Project Report}\\
 \vspace{1cm}
 	\LARGE
 	\text{MIRA: Modular Interchangeable Robotic Arm}\\
@@ -94,31 +95,30 @@
 
 %%%% Document begins here %%%%
 \newpage
-  \pagenumbering{roman}
-  \tableofcontents
-%    \newpage
-%    \listoffigures
+	\pagenumbering{roman}
+	\tableofcontents
+	\newpage
+	\listoffigures
 \newpage
 
 \pagenumbering{arabic}
 \subfile{Chapters/Introduction}
 \subfile{Chapters/Background}
 \subfile{Chapters/Description_of_Work}
+\subfile{Chapters/Methodology}
 \subfile{Chapters/Capstone_Reqs}
 \subfile{Chapters/Constraints}
 \subfile{Chapters/Acceptance_Criteria}
 % \subfile{Chapters/Test_and_Validation}
-% \subfile{Chapters/Methodology}
-% \subfile{Chapters/Schedule}
 \subfile{Chapters/Testing}
-\pagebreak
-\bibliography{export}{}
-\bibliographystyle{plain}
-% \subfile{Chapters/Bibliography}
 % \subfile{Chapters/Conclusion}
+\pagebreak
+\bibliographystyle{ieeetr}
+\bibliography{export}{}
 
-\appendices
-% \include{Appendices/Kit_Components}
+\begin{appendices}
+\include{Appendices/Kit_Components}
 \include{Appendices/GanttCharts}
+\end{appendices}
 
 \end{document}
