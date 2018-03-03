@@ -15,9 +15,15 @@
 \usepackage{mathcomp}
 \usepackage{graphicx}
 \usepackage{cite}
+\usepackage{titlesec}
 \usepackage[nomessages]{fp}
 % \usepackage[sorting=nyt,firstinits=true]{biblatex}
 \graphicspath{{./Pictures/}}
+
+% add subsubsubsection as a command
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}\\}
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{5}
 
 \usepackage[]{hyperref}
 \hypersetup{
@@ -105,10 +111,10 @@
 \pagenumbering{arabic}
 \subfile{Chapters/Introduction}
 \subfile{Chapters/Background}
-\subfile{Chapters/Description_of_Work}
+%\subfile{Chapters/Description_of_Work}
 \subfile{Chapters/Methodology}
-\subfile{Chapters/Capstone_Reqs}
-\subfile{Chapters/Constraints}
+%\subfile{Chapters/Capstone_Reqs}
+%\subfile{Chapters/Constraints}
 \subfile{Chapters/Acceptance_Criteria}
 %\subfile{Chapters/Test_and_Validation}
 \subfile{Chapters/Testing}
@@ -119,7 +125,8 @@
 
 \begin{appendices}
 \include{Appendices/Kit_Components}
-\include{Appendices/GanttCharts}
+%\include{Appendices/GanttCharts}
+\include{Appendices/Past_Work}
 \end{appendices}
 
 \end{document}

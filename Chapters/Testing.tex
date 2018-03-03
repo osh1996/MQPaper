@@ -1,4 +1,64 @@
 \section{Testing}
+\subsection{Acceptance Criteria}
+% Section outline
+% Overall summary of section, list of deliverables
+Acceptance criteria for this project will be broken into 5 major categories: Joints, End effector, Base, Software application, Code library
+
+\subsubsection{Joint Board}
+\begin{itemize}
+	\item Receive initialization information and joint angles from base
+	\item Moves joint to angles
+	\item Send position updates back to base
+	\item Pass power and signal buses
+	\item Capable of powering logic without powering motors
+	\item Control board is the same for each joint
+\end{itemize}
+
+\subsubsection{Modify RBE3001 Arm}
+\begin{itemize}
+	\item Remove control system and replace with our own 
+	\item Add a link to the existing arm
+	\item Replace currently implemented servo motors with brushed DC motors
+\end{itemize}
+
+\subsubsection{End Effector}
+\begin{itemize}
+	\item Receives power and signal buses
+	\item Keyed connection
+	\item One input connector
+	\item Terminate CAN bus
+	\item Uses a joint board
+\end{itemize}
+
+\subsubsection{Base}
+\begin{itemize}
+	\item Sends and receives joint angles to/from Personal Computer (PC)
+	\item Receives initialization information from PC, then sends it to all joints on signal bus
+	\item Outputs power and signal buses
+	\item Converts AC wall power to system power bus
+	\item Power supply and arm on/off switch
+	\item Capable of powering logic without powering motors
+	\item Array of indicator LEDs
+\end{itemize}
+
+\subsubsection{Software Application}
+\begin{itemize}
+	\item Sends configuration information to the Code Library
+	\item Sends individual joint angles or pose commands to robot through the Code Library
+	\item GUI to adjust current arm configuration parameters
+	\item Record and play back sequence of poses
+	\item Acts as a front-end for code library
+	\item Stretch goal: 3D model of arm moving in real-time
+\end{itemize}
+
+\subsubsection{Code Library}
+\begin{itemize}
+	\item Receive configuration information from user, selects control constants, sends to base
+	\item Able to control the robot: Receive joint status, send joint angles
+	\item Calculate joint angles using kinematics
+	\item Stretch Goal: Written so that it can interface with multiple languages
+\end{itemize}
+
 \subsection{Motor Driver}
 In order to determine whether the performance of the motor driver was dependent on input frequency or other factors, the input frequency was increase again from 200Hz to 10kHz. This time, the motor performed much better. The RPM actually increased with an increase in frequency, as can be seen in Table .
 %insert table of input frequency vs motor rpm
