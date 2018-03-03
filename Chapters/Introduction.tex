@@ -4,7 +4,18 @@
 % ~1 Paragraph for each major goal
 % Paragraph at end describing what is in this document
 
+%TODO: Say that RBE3001 is a course at WPI
+
 The goal of this project was to create an adaptable control system whose purpose is to drive a variety of robotic arms. To prove the usefulness of our system, we retrofitted an existing robot arm from the RBE 3001 course with our control system.  In addition to this, we modified the existing arm to include an interchangeable joint on the end of our arm, controlled by our system. To interface with our system, we created a GUI for easy configuration and basic control of the arm. The base communicates with a computer running control code through the software application. \\
+\newline
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{Initial_3001_Arm}
+\caption{Unmodified RBE 3001 Arm}
+\label{fig:Functional_Block_Diagram}
+\end{figure}
+
 \newline
 The existing RBE 3001 arm already had its own central control system. We removed this and replaced it with our own distributed one. To accomplish this, we designed a motor control board that communicates with a base controller.  We also designed and implement a new joint on the arm. This new joint is interchangeable to prove that our software and control system will work with more than one configuration. The joint implements our control board. \\
 \newline

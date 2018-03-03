@@ -222,6 +222,15 @@ Arm structure is not something we wanted to fully define, since the end user is 
 \subsection{Fourth Joint}
 In order to show that our control system can be integrated with other arms, we designed a fourth link to connect to an existing arm. By showing that we can add a newly designed link to our existing arm, we are creating a proof-of-concept that shows the versatility of our control system.  The design of the fourth link was done in Solidworks, a software that allows users to design objects in a 3-D space. Once we had designed the fourth link, we moved forward to the rapid-prototyping stage where we took our parts designed in Solidworks and converted them to 3-D printable models.  We then used Cura and the Lulzbot Taz 6 3-D printer to fabricate a first iteration of our fourth link.  From here we continued to refine our parts and re-print pieces with tighter tolerances until they came together to make a fourth joint that interfaces with our control system.  
 
+%\includegraphics[width=\textwidth]{Joint_4_Side}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.07]{Joint_4_Side}
+\caption{Side View of Joint 4}
+\label{fig:Functional_Block_Diagram}
+\end{figure}
+
 \subsubsection{Fourth Joint Design}
 Our first decision for creating the fourth joint was to create a joint that is actuated using a brushed DC motor to prove that we can control DC motors in addition to the servos that already exist on the arm.  Next, we decided that since most of the joints currently on the arm provide rotation perpendicular to the z-axis of the actuator, we wanted a joint that provides parallel rotation.  To accomplish this we removed the control logic from a servo that already was used on the arm, converting it into a brushed DC motor.  Next, we designed a direct-drive mount for the motor we fabricated so that the output shaft would rotate along the motor's axis of rotation.  We built a mounting for the motor and a structure to provide support for both radial and axial load on the shaft.  This structure made use of multiple radial bearings, placed to keep the shaft in line and eliminate any friction between moving and static pieces of the joint.  We also included a thrust bearing on the main shaft in order to stop thrust loads from being placed directly on the servo.  Finally, we designed an idler-shaft that sits in two bearings so that it can free rotate with negligible friction. The purpose of this idler shaft is to rotate in a 1:1 gear ratio with the main shaft using a timing belt to connect the two shafts.  At the bottom of the idler shaft there is a magnet whose changing magnetic field is read by a hall effect sensor mounted onto the bottom of the fourth joint so that it sits exactly 1mm from the magnet, allowing for optimal position reading.  
 
@@ -233,6 +242,7 @@ To create a prototype of our fourth joint, we determined the mechanical requirem
 \subsubsection{3-D Printing}
 3-D printing is convenient because it allows the user to manufacture parts in a novel way. Overall, we chose to 3-D print our fourth joint because it was what we were most familiar with and we had easy access to multiple 3-D printers.  While the process of 3-D printing a part might not be as accurate as other more conventional methods of machining parts, it is a much easier method to learn and has a much quicker turnaround time. For our choice of 3-D printer, we used the LulzBot Taz 6 with a single extruder head (Version 2.1) and 2.65mm filament. This printer is readily available to us through the school the resolution of the printer was fine enough that it was easily able to achieve the tight tolerances that we needed to print parts such as the timing belt teeth.    
 
+%TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
 \subsection{Arm Base}
 % Talk about requirements for base
 % take in new joint data at certain speeds
@@ -250,6 +260,7 @@ Maven is a utility for Java-based projects that seeks to provide a uniform build
 \subsection{Program flow}
 %TODO: When we figure out that HID/UART stuff, clarify here
 %TODO: Insert pretty UML image here
+%TODO: Add link to explain what a class and object are
 The main class starts the JavaFX Project. The JavaFX Project holds a RobotArm object, which contains data about how the arm is configured. The RobotArm object also contains a Joint object for each joint on the arm. Each Joint object makes sure to tell the Comms object that it's time to send a message to the actual joint whenever new information about itself comes in. When the user enters new information about the arm into the GUI, the GUI's controller tells the RobotArm to change that information about itself. For example, if the user changes the setpoint of Joint 2 from 90 degrees to 112 degrees, the GUI will tell the RobotArm that Joint 2's position has been updated to 112. Since joint position information is kept track of inside of one of RobotArm's Joint objects, the information gets passed to RobotArm's Joint 2. Joint 2 will, upon seeing that its position has been updated, ask the Comms object to convey the new position information to the arm's base board.
 \noindent 
 
