@@ -140,8 +140,8 @@ SPI and I$^2$C are mostly used for on-board, controller-to-peripheral communicat
 
 \noindent RS485 and CAN are similar in many ways, but with a few key differences that separate them. RS485 is very fast to transmit and simple to implement, but takes a lot of the controller's time to send packets. CAN has the advantage because the controller and transceiver control the transmission independent of the controller so the controller has more free time to process data. Another advantage CAN has over RS485 is the amount of error checking that goes on to ensure proper message transmission. For these reasons, we decided to use CAN to communicate between the base and control boards.
 
-\section{Joint Control Board}
-\subsection{Motor Driver}
+\subsection{Joint Control Board}
+\subsubsection{Motor Driver}
 The DC motor driver selected was the DRV8872. This driver takes in two inputs, in1 and in2, which affect the output much like inputs to an H-bridge.The exception is when both inputs are high. In this case, the inputs are pulled together as a motor break. A truth table can be seen in Table \ref{tbl:drv8872-truth6}.
 
 \begin{table}[H]
@@ -172,9 +172,10 @@ During initial testing, the motor driver was wired up with $V_m$ of 8.4V, logic 
 
 Further testing revealed a strange behavior when increasing the frequency of the input PWM signal. The motor spun normally at low frequencies of around 500Hz, but at around 1kHz the motor started slowing down and making a whining sound. The problem worsened with increasing frequency. Eventually, this problem was fixed by using a power supply that could output 3A and adding capacitors from in1 and in2 to ground. With these additions, the motor driver functioned as expected.
 
-\subsection{DC Motor}
+\subsubsection{DC Motor}
+The DC motors chosen for the fourth link of our arm were actually digital servos 
 
-\subsection{Demultiplexer}
+\subsubsection{Demultiplexer}
 The original demultiplexer selected for the joint board (SN74LVC1G19) did not output the correct values to drive the motor driver (DRV8872). The demultiplexer output can be seen in Table  and the motor driver inputs can be seen in Table . When the EN pin was pulled high, both outputs would also be driven high. This effect is undesirable since, when given a PWM signal, this would cause the motor driver to turn then brake then turn again as opposed to the desired turn then coast then turn. To solve this problem, a different chip (SN74LVC1G18) was selected. The truth table for this chip can be seen in Table \ref{tbl:sn74lvc1g18-truth}.
 \begin{table}[H]
 	\centering
@@ -194,7 +195,7 @@ The original demultiplexer selected for the joint board (SN74LVC1G19) did not ou
 	\label{tbl:sn74lvc1g18-truth}
 \end{table}
 
-\subsection{INA332}
+\subsubsection{INA332}
 \label{sec:meth-ina332}
 The INA332 instrumentation amplifier is used to measure the force applied to a load cell. The amplification of this amplifier is given from the datasheet as Equation \ref{eqn:ina332-gain}. Since the load cell needed an amplification of at least 100, the calculated resistances were $R_1$ = 10k$\Omega$ and $R_2$ = 195k$\Omega$. The actual values selected for $R_1$ and $R_2$ were 10k$\Omega$ and 200k$\Omega$, respectively. This gives the amplifier an expected gain of ~105 V/V.
 
@@ -205,14 +206,16 @@ G = 5 + 5(\frac{R_1}{R_2})
 
 The INA332 needs a voltage reference to use as the 0V differential output. Initially, two 1k$\Omega$ resistors were used to apply this voltage. This caused the output to change nonlinearly with the input voltage. The resistors were replaced with a LM358 dual operational amplifier, configured as a voltage buffer with the input connected to a potentiometer. The INA332 inputs were connected to ground and the LM358 buffer potentiometer was adjusted to set the 0V output to  $\frac{1}{2} V_{cc}$. This voltage was 1.846V. Instead of a potentiometer, two resistors were used to create this 1.846V offset.
 
-\subsection{TM4C123GXL Launchpad}
+\subsubsection{TM4C123GXL Launchpad}
+Selecting a microcontroller was a key part of making the joint control board. Without a decently capable MCU, the joint board would not be able to function as we want it to, but buying the best microcontroller on the market can be costly. The EK-TM4C123GXL is an ARM Coretex M4f-based microcontroller evaluation kit from TI that has many peripherals to allow us to control the joint board without buying many external peripherals. The perihperals on this chip that we will need include a CAN controller, 12-bit ADC, USB controller, SSI controller, PWM controller, and many GPIO. These perihperals were implemented separately with a test circuit configured to verify that each peripheral was functioning correctly.
+
 Several peripherals were needed to achieve the desired functionality from our microcontroller. A test board was set up in order to test and verify that each of these peripherals was setup properly and working as expected. The test board consisted of a potentiometer connected to an ADC pin, an SPI controlled ADC (MCP3202), the 1:2 demultiplexer (SN74LVC1G18), CAN transceiver (TC332), and some LEDs.
 
 As a temporary stand in for the AS5055 absolute hall effect encoder to test the SSI peripheral, a MCP3202 12-bit, 2 channel ADC was used. Both devices use SPI to communicate their sensor data back to the MCU, and the packets are similar in structure. Some differences between the two that can be changed are a maximum sample rate for the AS5055 of ~1ms as opposed to the few SCLK cycle delays for the MCP3202. The AS5055 has a maximum SCLK frequency of up to 10MHz at 3.3V while the MCP3202 has a limit of 900kHz at 3.3V. 
 
-The potentiometer was connected to PB? which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. 
+The potentiometer was connected to PB? which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s. 
 
-\subsection{Hall Effect Encoder}
+\subsubsection{Hall Effect Encoder}
 An Arduino Uno was used to ensure that the AS5055a absolute hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly get get some functionality out a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every 
 
 \subsection{CAN Bus}
@@ -222,14 +225,25 @@ CAN bus will be used to communicate between the base and joints. A limitation of
 We decided to use the upper 6 bits as a joint board number identifier, a number unique to that specific joint board, and the lower 5 bits as a message type. By doing this, we can tell the base the joint identifier number and position on the arm to rout position update messages to the correct joint on the arm.
 
 There were a few ways of accomplishing this. One would be to program each joint board with a different identifier number. This could get very tedious and confusing for having many joint boards, since we would have to change and track identifier numbers for each unique joint board. Another option was to use EEPROM to automatically store the identifier number and upload it via the USB cable used for programming the board. This could get complicated since we would have to write code to not only read in the identifier properly, but also store it in EEPROM properly. Instead, we decided to use DIP switches. DIP switches allow us to input the identifier number in binary and update them on the fly without reprogramming the board. 
+%TODO: insert image of DIP switches (or schematic)
 
 On startup, the joint board will read in the identifier bits and store them in a variable. The identifier will then be used as a mask for the CAN message receive IDs. The CAN controller compares incoming message IDs to the ID mask and ID value set when initializing the message receive object. When setting the message receive object, we can set the message ID to the joint board identifier, shifted up by 5 bits, and setting the mask to only care about receiving messages that match the upper 6 bits, we can set the message receive object to receive messages with the joint board ID in the upper 6 bits, regardless of message type. Since there are 32 message objects available on the CAN controller of the TM4C123GH6PM microcontroller, we have a great amount of flexibility for listening to different types of messages.
+%TODO: insert figure explaining message ID breakdown
 
 \subsubsection{Implementing a Simple CAN Bus}
 The preliminary CAN setup consisted of two TM4C Launchpads, one with transmit code and one with receive code. The transmitting board was set up for 1Mbps transmission with message ID = 2, and message length = 1 byte. The message data was a 4-bit value that incremented every time the message was successfully transmitted. A software delay was used to slow the transmission rate down to about every ~1.2 seconds. The receive board was set up for 1Mbps transmission with message ID = 0, message ID mask = 0, and message length = 1 byte. Setting both the message ID and mask to 0 signals the controller to accept any message. 4 LEDs were set up to see the CAN message data visually. 
+%TODO: insert table of configuration data
 
 We had a couple of problems getting this simple example to work. Initially, one of the jumper wires used for the CAN bus was broken, causing the CAN Hi lines on the transceivers to not be connected. The next problem was that the sample code provided by TI was not correct. When the CAN controller receives a valid message, it signals the processor with an interrupt. When a receive interrupt is processed by the example code, the interrupt flag is cleared and then the message data is read in. The problem is that when the interrupt flag is cleared, the new data bit that signals that there is valid data available is cleared. To fix this, the operations must be switched so that message data is read in before the interrupt flag is cleared. Once this fix was applied, CAN communications were functional.
+%TODO: insert image of CAN bus test setup
 
+\subsubsection{CAN Termination}
+CAN specification states that the CAN bus needs to be terminated on both ends by 120$\Omega$ resistors. The purpose of these resistors is to help mitigate signal reflections as well as pull the CAN Hi and CAN Lo lines together when the bus state is recessive. Since the resistors need to be at either end of the CAN bus, using normal resistors requires a static bus configuration. Out system will not necessarily have a fixed configuration, though, so a different solution was needed.
+
+One method was to require the end user to attach a unique component, such as an end effector, at either end of the bus. This would effectively mean that an arm would always need a base module and an end effector to function properly. This rigid definition was not something we wanted to enforce on the end user, so instead we came up with a auto-disconnect circuit to disconnect the terminating resistor if another joint is added to the arm.
+
+The way this works is essentially just a MOSFET inverter. The MOSFET drain and source connect the CAN Hi and CAN Lo lines through a 120$\Omega$ resistor and the gate is pulled up to $V_{DD}$ through a 1l$\Omega$ resistor. When the next joint is connected, the gate is connected to ground and the MOSFET is opened, disconnecting the CAN Hi and CAN Lo lines. When there is no joint connected, the MOSFET is closed, effectively acting as a 5$\Omega$ resistor in series with the 120$\Omega$ resistor. This new 125$\Omega$ resistance is within tolerance in the CAN specifications which state that the resistance must be between 50$\Omega$ and 70$\Omega$.
+%TODO: insert image of CAN termination schematic
 
 \subsection{Arm Structure}
 Arm structure is not something we wanted to fully define, since the end user is supposed to create their own arms, but there were some basic things we needed to define. The first of these is that every arm must begin with a base module and have some combination of up to four additional joints connected.  This allows the end-user flexibility in how they want to construct the arm without allowing them to add too many joints.
