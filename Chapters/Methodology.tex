@@ -249,11 +249,19 @@ The way this works is essentially just a MOSFET inverter. The MOSFET drain and s
 Arm structure is not something we wanted to fully define, since the end user is supposed to create their own arms, but there were some basic things we needed to define. The first of these is that every arm must begin with a base module and have some combination of up to four additional joints connected.  This allows the end-user flexibility in how they want to construct the arm without allowing them to add too many joints.
 
 \subsection{Fourth Joint}
+%TODO: insert solidworks .dwg files and place them in the correct spot
 In order to show that our control system can be integrated with other arms, we designed a fourth joint to connect to an existing arm. By showing that we can add a newly designed joint to our existing arm, we are creating a proof-of-concept that shows the versatility of our control system.  The design of the fourth joint was done in Solidworks, a software that allows users to design objects in a 3-D space. Once we had designed the fourth link, we moved forward to the rapid-prototyping stage where we took our parts designed in Solidworks and converted them to 3-D printable models.  We then used the software Cura and the Lulzbot Taz 6 3-D printer to fabricate a first iteration of our fourth joint.  From here we continued to refine our parts and re-print pieces with tighter tolerances until they came together to make a fourth joint that interfaces with our control system.  
 
 \subsection{Fourth Joint Design}
 The process of prototyping our fourth joint started with creating an interface so that we can connect it to the already existing arm.  We decided for the sake of simplicity to attach our fourth joint where the current end-of-arm-tooling would normally connect. \\
-\newline
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[angle=90, scale=0.1]{current_arm_connector}
+	\caption{Current Arm Encoder Mount}
+	\label{Current Arm Encoder Mount}
+\end{figure}
+
 Our second decision was to create a joint that is actuated using a brushed DC motor to prove that we can control DC motors in addition to the servos that already exist on the arm.  Next, we decided that since most of the joints currently on the arm provide rotation perpendicular to the z-axis of the actuator, we wanted a joint that provides parallel rotation.  To accomplish this we removed the control logic from a servo that already was used on the arm, converting it into a brushed DC motor.  Next, we designed a direct-drive mount for the motor we fabricated so that the output shaft would rotate along the motor's axis of rotation.  We built a mounting for the motor and a structure to provide support for both radial and axial load on the shaft.  This structure made use of multiple radial bearings, placed to keep the shaft in line and eliminate any friction between moving and static pieces of the joint.  We also included a thrust bearing on the main shaft in order to stop thrust loads from being placed directly on the servo.  Finally, we designed an idler-shaft that sits in two bearings so that it can free rotate with negligible friction. The purpose of this idler shaft is to rotate in a 1:1 gear ratio with the main shaft using a timing belt to connect the two shafts.  At the bottom of the idler shaft there is a magnet whose changing magnetic field is read by a hall effect sensor mounted onto the bottom of the fourth joint so that it sits exactly 1mm from the magnet, allowing for optimal position reading.  \\
 
 \subsection{Fourth Joint Prototyping}
@@ -268,7 +276,7 @@ To create a prototype of our fourth joint, we determined the mechanical requirem
 % Talk about requirements for base
 % take in new joint data at certain speeds
 % output new joint data at certain speeds
-The mechanical side of the base module is relatively simple because the physical structure comes from the pre-existing arm. In order to make this compatible with our controls system, all we have to do is mount our joint and encoder boards to it.  This is fairly simple since we use a slightly modified version of the encoder board on the existing arm with the same mounting scheme. Because we have not finalized our joint board, we don't currently have a mounting scheme for it. 
+The mechanical side of the base module is relatively simple because the physical structure comes from the pre-existing arm. In order to make this compatible with our controls system, all we have to do is mount our joint and encoder boards to it.  This is fairly simple since we use a slightly modified version of the encoder board on the existing arm with the same mounting scheme. Because we have not finalized our joint board, we don't currently have a mounting scheme for it. Finally, we must provide a way to power the arm that passes through the base module.  This will be accomplished by creating through holes in the base module that allow for 
 
 %TODO: \subsection{End-of-Arm Tooling}
 
@@ -287,7 +295,7 @@ The main class starts the JavaFX Project. The JavaFX Project holds a RobotArm ob
 The Joint object does not contain a Comms object inside itself. Rather, there is a single Comms object for the entire program to use. The Comms object follows the Singleton design pattern. A singleton is a class which can only ever be instantiated one time. Singletons are often used to hold configuration information about a program because they guarantee that if one object makes changes to the singleton's settings then any other object that subsequently asks for those settings will get back the most up-to-date version.
 \noindent 
 
-In this case, it makes sense to use a singleton because we want to guarantee that there's only a single place in the code which tries to access the USB port. Another way to accomplish this same goal would have been to move all of Comms's functions to inside the JavaFX controller. There is only one controller object. Arranging the program this way would have violated Java's design principles and would have made writing the code a battle rather than an art form. %Please don't take this out they're definitely not going to get this far into the paper anyway probably
+In this case, it makes sense to use a singleton because we want to guarantee that there's only a single place in the code which tries to access the serial port at any given time. Another way to accomplish this same goal would have been to move all of Comms's functions to inside the JavaFX controller. There is only one controller object. Arranging the program this way would have violated Java's design principles and would have made writing the code a battle rather than an art form. %Please don't take this out they're definitely not going to get this far into the paper anyway probably
 Each joint would need to hold a reference to the JavaFX controller inside itself. Referencing such an architecture-specific piece of the program within the core of the program's logic would be bad for future portability of the code. 
 \noindent
 
