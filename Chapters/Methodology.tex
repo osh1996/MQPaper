@@ -175,20 +175,26 @@ Maven is a utility for Java-based projects that seeks to provide a uniform build
 
 \subsection{Program flow}
 %TODO: When we figure out that HID/UART stuff, clarify here
-%TODO: Insert pretty UML image here
+
 %TODO: Add link to explain what a class and object are
-The main class starts the JavaFX Project. The JavaFX Project holds a RobotArm object, which contains data about how the arm is configured. The RobotArm object also contains a Joint object for each joint on the arm. Each Joint object makes sure to tell the Comms object that it's time to send a message to the actual joint whenever new information about itself comes in. When the user enters new information about the arm into the GUI, the GUI's controller tells the RobotArm to change that information about itself. For example, if the user changes the setpoint of Joint 2 from 90 degrees to 112 degrees, the GUI will tell the RobotArm that Joint 2's position has been updated to 112. Since joint position information is kept track of inside of one of RobotArm's Joint objects, the information gets passed to RobotArm's Joint 2. Joint 2 will, upon seeing that its position has been updated, ask the Comms object to convey the new position information to the arm's base board.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{pc_Mira_UML}
+\caption{UML diagram}
+\label{fig:Functional_Block_Diagram}
+\end{figure}
+
+%TODO do something more with this sentence
+\noindent The front-end program running on the PC is written in Java. We used JavaFX to make the GUI. 
+
+\noindent The main class starts the JavaFX Project. The JavaFX Project holds a RobotArm object, which contains data about how the arm is configured. The RobotArm object also contains a Joint object for each joint on the arm. Each Joint object makes sure to tell the Comms object that it's time to send a message to the actual joint whenever new information about itself comes in. When the user enters new information about the arm into the GUI, the GUI's controller tells the RobotArm to change that information about itself. For example, if the user changes the setpoint of Joint 2 from 90 degrees to 112 degrees, the GUI will tell the RobotArm that Joint 2's position has been updated to 112. Since joint position information is kept track of inside of one of RobotArm's Joint objects, the information gets passed to RobotArm's Joint 2. Joint 2 will, upon seeing that its position has been updated, ask the Comms object to convey the new position information to the arm's base board.
 
 \noindent The Joint object does not contain a Comms object inside itself. Rather, there is a single Comms object for the entire program to use. The Comms object follows the Singleton design pattern. A singleton is a class which can only ever be instantiated one time. Singletons are often used to hold configuration information about a program because they guarantee that if one object makes changes to the singleton's settings then any other object that subsequently asks for those settings will get back the most up-to-date version.
 
 \noindent In this case, it makes sense to use a singleton because we want to guarantee that there's only a single place in the code which tries to access the serial port at any given time. Another way to accomplish this same goal would have been to move all of Comms's functions to inside the JavaFX controller. There is only one controller object. Arranging the program this way would have violated Java's design principles and would have made writing the code a battle rather than an art form. %Please don't take this out they're definitely not going to get this far into the paper anyway probably
 
 \noindent Each joint would need to hold a reference to the JavaFX controller inside itself. Referencing such an architecture-specific piece of the program within the core of the program's logic would be bad for future portability of the code. 
-
-%TODO do something more with this sentence
-\noindent The front-end program running on the PC is written in Java. We used JavaFX to make the GUI. 
-
-
 
 
 
