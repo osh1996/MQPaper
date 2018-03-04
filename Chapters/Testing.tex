@@ -141,14 +141,14 @@ Speed (RPM) & Torque (N-m) & Torque (in-lbf) & Current (A) & Pout (W) & Efficien
 %\subsection{Demultiplexer}
 %
 %\subsection{INA332}
-%In order to generate a small input voltage to the amplifier, a potentiometer was used with a larger resistor in series, creating a variable voltage divider. To create the small input voltage necessary, a 100k$\Omega$ resistor and a 1k$\Omega$ potentiometer were used. With the configuration given in \ref{sec:meth-ina332}, the expected 
+%In order to generate a small input voltage to the amplifier, a potentiometer was used with a larger resistor in series, creating a variable voltage divider. To create the small input voltage necessary, a 100k$\Omega$ resistor and a 1k$\Omega$ potentiometer were used. With the configuration given in \ref{sec:meth-ina332}, the expected
 %
 %\subsection{TM4C123}
 %Several peripherals were needed to achieve the desired functionality from our microcontroller. A test board was set up in order to test and verify that each of these peripherals was setup properly and working as expected. The test board consisted of a potentiometer connected to an ADC pin, an SPI controlled ADC (MCP3202), the 1:2 demultiplexer (SN74LVC1G18), CAN transceiver (TC332), and some LEDs.
 %
-%As a temporary stand in for the AS5055 absolute hall effect encoder to test the SSI peripheral, a MCP3202 12-bit, 2 channel ADC was used. Both devices use SPI to communicate their sensor data back to the MCU, and the packets are similar in structure. Some differences between the two that can be changed are a maximum sample rate for the AS5055 of ~1ms as opposed to the few SCLK cycle delays for the MCP3202. The AS5055 has a maximum SCLK frequency of up to 10MHz at 3.3V while the MCP3202 has a limit of 900kHz at 3.3V. 
+%As a temporary stand in for the AS5055 absolute hall effect encoder to test the SSI peripheral, a MCP3202 12-bit, 2 channel ADC was used. Both devices use SPI to communicate their sensor data back to the MCU, and the packets are similar in structure. Some differences between the two that can be changed are a maximum sample rate for the AS5055 of ~1ms as opposed to the few SCLK cycle delays for the MCP3202. The AS5055 has a maximum SCLK frequency of up to 10MHz at 3.3V while the MCP3202 has a limit of 900kHz at 3.3V.
 %
-%The potentiometer was connected to PB? which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. 
+%The potentiometer was connected to PB? which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled.
 %\subsection{Hall Effect Encoder}
 %\subsection{CAN Bus}
-%Initial CAN testing consisted of 
+%Initial CAN testing consisted of
