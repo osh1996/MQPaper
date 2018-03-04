@@ -75,7 +75,15 @@ The original demultiplexer selected for the joint board (SN74LVC1G19) did not ou
 
 \subsubsection{INA332}
 \label{sec:meth-ina332}
-\noindent The INA332 instrumentation amplifier is used to measure the force applied to a load cell. The amplification of this amplifier is given from the datasheet as Equation \ref{eqn:ina332-gain}. Since the load cell needed an amplification of at least 100, the calculated resistances were $R_1$ = 10k$\Omega$ and $R_2$ = 195k$\Omega$. The actual values selected for $R_1$ and $R_2$ were 10k$\Omega$ and 200k$\Omega$, respectively. This gives the amplifier an expected gain of ~105 V/V.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{INA332-Test-Circuit}
+	\caption{INA332 Test Circuit}
+	\label{fig:INA332_Test_Circuit}
+\end{figure}
+
+\noindent The INA332 instrumentation amplifier is used to measure the force applied to a load cell. The amplification of this amplifier is given from the datasheet as Equation \ref{eqn:ina332-gain}. Since the load cell needed an amplification of at least 100, the calculated resistances were $R_1$ = 10k$\Omega$ and $R_2$ = 195k$\Omega$. The actual values selected for $R_1$ and $R_2$ were 10k$\Omega$ and 200k$\Omega$, respectively. This gives the amplifier an expected gain of ~105 V/V. See Figure \ref{fig:INA332_Test_Circuit} for the circuit diagram.
 
 \begin{equation}
 G = 5 + 5(\frac{R_1}{R_2})
