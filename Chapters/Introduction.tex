@@ -1,13 +1,41 @@
+\noindent \newline 
+\textbf{Abstract}
+Low-cost robotic arms are becoming much more popular in educational settings. The goal of this project is to create a proof of concept for a modular robotic arm. To accomplish this, we have modified an existing arm to use our own modular control system, created a removable joint that can be connected to the end of the arm, and created an end-user interface which allows visualization of the arm’s movement in real time. Creating this arm will make robotics education accessible to a larger number of people, without compromising the potential for each person to gain a high quality understanding of the way robotic arms behave. \\
+\newpage
+
 \section{Introduction} 
 % Section outline:
 % Overall summary of project - ~1 sentence per major goal
 % ~1 Paragraph for each major goal
 % Paragraph at end describing what is in this document
 
-%TODO: Say that RBE3001 is a course at WPI
 %Designed by Kevin Harrington in Bowler Studio
+\subsection{Problem Statement}
+\noindent Currently, it is difficult for users to fully understand the motion of robotic arms and the kinematics that control them. This understanding is a crucial step in working with robotic arms safely and efficiently, but is often lacking due to the inability of diagrams and descriptions to fully convey what makes one arm operate differently than another. With the use of robotic arms becoming more common and the many different kinds of arms available, it is important to have a prototyping platform that can emulate many different kinds of arms so that the user can gain a better grasp of what components make up a robotic arm why one arm is better suited for a particular use case than another.
 
-The goal of this project was to create an adaptable control system whose purpose is to drive a variety of robotic arms. To prove the usefulness of our system, we retrofitted an existing robot arm from the RBE 3001 course with our control system.  In addition to this, we modified the existing arm to include an interchangeable joint on the end of our arm, controlled by our system. To interface with our system, we created a GUI for easy configuration and basic control of the arm. The base communicates with a computer running control code through the software application. \\
+\subsection{Goal Statement}
+The goal of this project is to create a proof of concept of an arm that can be reconfigured by end users such that they can create many different types of functionality from one set of principal components. To accomplish this, we need to break the arm down into small modularized joints that can be rearranged to show how the combination of different kinds of joints can lead to a specific end result. We also need to create an adaptable electrical system that is able to modularly control each different joint by having the capability to handle multiple types of sensors and actuators. By doing so, we hope to take the first step into creating a standardized kit of parts and the software accompanying it to prototype almost any type of arm that is currently used. 
+
+\subsection{Objectives}
+\noindent In order to measure our progress, we need to define a set of objectives that we need to accomplish in order to meet our goals outlined above. To create a proof of concept of a modular robotic arm prototyping platform, we set the following objectives: 
+%\newline \noindent \textbf{Objectives}
+\begin{itemize}
+\item Define commonly used robotic arms and their uses.
+\item Understand the variety of different joints and what sensors and actuators are used to control them.
+\item Understand how the combinations of different joints affects the kinematics of the arm.
+\item Classify several different standardized joints and what sensors/actuators make them work.
+\item Create a control bus made up of connected joints with a node at each joint capable of controlling any single joint.
+\item Create a joint that can be added and removed from an existing arm in order to modify the arm's functionality.
+\item Create an arm control board which functions as an interface between a computer and our arm's control bus allowing for users to interact with the arm through a software interface.
+\item Create a software application which displays information about the arm in real time and allows users to easily set up their arm and send it commands.
+\end{itemize} 
+
+\subsection{Constraints}
+\noindent 
+\subsection{Summary}
+
+
+The goal of this project was to create an adaptable control system whose purpose is to drive a variety of robotic arms. To prove the usefulness of our system, we retrofitted an existing robot arm from the RBE 3001 course with our control system. In addition to this, we modified the existing arm to include an interchangeable joint on the end of our arm, controlled by our system. To interface with our system, we created a GUI for easy configuration and basic control of the arm. The base communicates with a computer running control code through the software application. \\
 \newline
 
 \begin{figure}[H]
