@@ -33,9 +33,31 @@ Potentiometers seem like a good choice due to their simplicity and high accuracy
 \noindent This leaves us with hall effect sensors. These sensors are very small and moderately high resolution while also being a contact-free sensor, so wearing them out will not be a concern. A main concern with hall effect sensors is that they need to be mounted somewhat precisely and carefully. Traditional machining methods make this difficult to accomplish, but 3D printing allows us to easily overcome this challenge.  Another concern is external electromagnetic interference, but with somewhat careful circuit board design, we should be able to minimize this issue.
 
 \subsubsection{Motor Current Sensor}
-A shunt resistor seems practical due to the simplicity of the design, but careful designing must be done in order to get the noise levels down to a reasonable amount. In addition to this, the power loss when using a shunt resistor could cause the arm to stall before anticipated. When the shunt resistor takes power from the motor, the whole motor curve slides inward, decreasing the maximum power output. Trace resistance would be a good alternative, but requires calibration after the circuit is constructed. 
+A shunt resistor seems practical due to the simplicity of the design, but careful tuning must be done in order to get the noise levels down to a reasonable amount. In addition to this, the power loss when using a shunt resistor could cause the arm to stall before anticipated. When the shunt resistor takes power from the motor, the whole motor curve slides inward, decreasing the maximum power output. Trace resistance would be a good alternative, but requires calibration after the circuit is constructed. 
 
 \noindent Instead of these, we decided to use a hall effect current sensor. Hall effect current sensors are ready-made sensors that give low noise, properly calibrated outputs, are not very expensive, and are easy to integrate into a circuit design. These sensors have extremely small power losses to the motor. The main drawback of these sensors is that they have a low bandwidth, but we are using DC motors so this should not be a problem. Some care will need to be taken when placing these on the circuit, however, since they are sensitive to external magnetic fields.
+
+\begin{table}[H]
+	\centering
+	\caption{Current Sense IC Comparison}
+	\begin{tabular}{|p{4.5cm}|p{1.5cm}|p{2cm}|p{1.7cm}|c|p{1.4cm}|}
+\hline
+Part name & Supply Voltage (V) & Current Range (A) & Sensitivity (mV/A) & Output & Built in filter? \\
+\hline
+
+ACS722LLCTR-05AB-T & 3.3 & -5 to +5 & 264 & Analog & y \\
+
+ACS723LLCTR-05AB-T & 5 & -5 to +5 & 400 & Analog & y \\
+
+ACS724LLCTR-10AB-T & 5 & -10 to +10 & 200 & Analog & n \\
+
+ACS725LLCTR-10AU-T & 3.3 & 0 to +10 & 264 & Analog & n \\
+\hline
+
+\end{tabular}
+
+	\label{tbl:Current Sense IC Comparison}
+\end{table}
 
 \subsubsection{Inter-board Communication}
 SPI and I$^2$C are mostly used for on-board, controller-to-peripheral communications and therefore are not a good choice for the base to control board communication. RS232 is not a good solution for this problem either because it is a single transmitter and single receiver per line. This leaves RS485 and CAN.
@@ -61,6 +83,32 @@ The DC motor driver selected was the DRV8872. This driver takes in two inputs, i
 	\end{tabular}
 	\label{tbl:drv8872-truth6}
 \end{table}
+
+\noindent This motor was chosen because %TODO: Why?
+its input is relatively easy to interface with from our microcontroller, and it can handle the current needed to make the motors operate at their highest power output.
+\begin{table}[H]
+	\centering
+	\caption{Motor Driver Comparison}
+\begin{tabular}{|c|c|c|c|}
+	\hline
+	Part name  & Peak Current (A) & Continuous current (A) & Control method \\
+	\hline
+	
+	LMD18245 & 6 & 3 & direction, brake \\
+	
+	DRV8842 & 6 & 3.5 & PWM \\
+	
+	DRV8829 & 5 & 3.5 & Phase, enable \\
+	
+	L298 & 3 & 2 & in1, in2, en \\
+	
+	DRV8872 & 3.6 & 3.5 & in1, in2 \\
+	\hline
+	\end{tabular}
+
+	\label{tbl:Motor Driver Comparison}
+\end{table}
+
 
 \noindent To measure the speed of the motor, a servo horn with 6 spokes was attached and a beam break sensor was mounted on the motor with the spoke traveling through the beam. The signal line of the beam break sensor was connected to an Arduino that measured the frequency by incrementing a count in an interrupt triggered on a pin change. The ISR just incremented a count that was printed out and reset every 5 seconds. Some issues arose with this system, however, since there was a small amount of bouncing on the rising and falling edges, leading to multiple readings for each beam break. This was solved by placing a 10nF capacitor from the signal line to ground. Since this number was triggered 12 times per revolution and printed out every 5 seconds, the actual printed value happened to be in revolutions per minute, as shown in \ref{eqn:motor_driver_test}.
 %insert a figure of the encoder setup
@@ -128,21 +176,28 @@ An Arduino Uno was used to ensure that the AS5055a absolute hall effect encoder 
 
 \subsection{CAN Bus}
 \subsubsection{Determining Joint Placement with Message ID}
-CAN bus will be used to communicate between the base and joints. A limitation of CAN is that there is no way of determining position of a module on the bus. This is important for controlling a robot arm since joint 1 is controlled differently from joint 2, etc. In order to determine the position of a joint board on the bus, another method is needed. The CAN message ID contains 11 bits in the standard frame.
+CAN bus will be used to communicate between the base and joints. A limitation of CAN is that there is no way of determining the position of a module on the bus. This is important for controlling a robot arm since joint 1 is controlled differently from joint 2, etc. In order to determine the position of a joint board on the bus, another method is needed. The CAN message ID contains 11 bits in the standard frame.
 
 \noindent We decided to use the upper 6 bits as a joint board number identifier, a number unique to that specific joint board, and the lower 5 bits as a message type. By doing this, we can tell the base the joint identifier number and position on the arm to rout position update messages to the correct joint on the arm.
 
 \noindent There were a few ways of accomplishing this. One would be to program each joint board with a different identifier number. This could get very tedious and confusing for having many joint boards, since we would have to change and track identifier numbers for each unique joint board. Another option was to use EEPROM to automatically store the identifier number and upload it via the USB cable used for programming the board. This could get complicated since we would have to write code to not only read in the identifier properly, but also store it in EEPROM properly. Instead, we decided to use DIP switches. DIP switches allow us to input the identifier number in binary and update them on the fly without reprogramming the board.
 %TODO: insert image of DIP switches (or schematic)
 
-\noindent On startup, the joint board will read in the identifier bits and store them in a variable. The identifier will then be used as a mask for the CAN message receive IDs. The CAN controller compares incoming message IDs to the ID mask and ID value set when initializing the message receive object. When setting the message receive object, we can set the message ID to the joint board identifier, shifted up by 5 bits, and setting the mask to only care about receiving messages that match the upper 6 bits, we can set the message receive object to receive messages with the joint board ID in the upper 6 bits, regardless of message type. Since there are 32 message objects available on the CAN controller of the TM4C123GH6PM microcontroller, we have a great amount of flexibility for listening to different types of messages.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{cuteDipSwitch}
+\caption{8-channel DIP Switch}
+\label{fig:8_channel DIP Switch}
+\end{figure}
+
+\noindent On startup, the joint board reads in the identifier bits and stores them in a variable. The identifier is then used as a mask for the CAN message receive IDs. The CAN controller compares incoming message IDs to the ID mask and ID value set when initializing the message receive object. When setting the message receive object, we can set the message ID to the joint board identifier, shifted up by 5 bits, and set the mask to only listen for messages that match the upper 6 bits. We can set the message receive object to receive messages with the joint board ID in the upper 6 bits, regardless of message type. Since there are 32 message objects available on the CAN controller of the TM4C123GH6PM microcontroller, we have a great amount of flexibility for listening to different types of messages.
 %TODO: insert figure explaining message ID breakdown
 
 \subsubsection{Implementing a Simple CAN Bus}
 The preliminary CAN setup consisted of two TM4C Launchpads, one with transmit code and one with receive code. The transmitting board was set up for 1Mbps transmission with message ID = 2, and message length = 1 byte. The message data was a 4-bit value that incremented every time the message was successfully transmitted. A software delay was used to slow the transmission rate down to about every ~1.2 seconds. The receive board was set up for 1Mbps transmission with message ID = 0, message ID mask = 0, and message length = 1 byte. Setting both the message ID and mask to 0 signals the controller to accept any message. 4 LEDs were set up to see the CAN message data visually.
 %TODO: insert table of configuration data
 
-\noindent We had a couple of problems getting this simple example to work. Initially, one of the jumper wires used for the CAN bus was broken, causing the CAN Hi lines on the transceivers to not be connected. The next problem was that the sample code provided by TI was not correct. When the CAN controller receives a valid message, it signals the processor with an interrupt. When a receive interrupt is processed by the example code, the interrupt flag is cleared and then the message data is read in. The problem is that when the interrupt flag is cleared, the new data bit that signals that there is valid data available is cleared. To fix this, the operations must be switched so that message data is read in before the interrupt flag is cleared. Once this fix was applied, CAN communications were functional.
+\noindent We had several problems getting this simple example to work. Initially, one of the jumper wires used for the CAN bus was broken, causing the CAN Hi lines on the transceivers to not be connected. The next problem was that the sample code provided by TI was not correct. When the CAN controller receives a valid message, it signals the processor with an interrupt. When a receive interrupt is processed by the example code, the interrupt flag is cleared and then the message data is read in. The problem is that when the interrupt flag is cleared, the new data bit that signals that there is valid data available is cleared. To fix this, the operations must be switched so that message data is read in before the interrupt flag is cleared. Once this fix was applied, CAN communications were functional.
 %TODO: insert image of CAN bus test setup
 
 \subsubsection{CAN Termination}
@@ -249,7 +304,7 @@ Speed (RPM) & Torque (N-m) & Torque (in-lbf) & Current (A) & Pout (W) & Efficien
 \centering
 \includegraphics{motor}
 \caption{HV5923MG Servo Motor}
-\label{fig:Functional_Block_Diagram}
+\label{fig:HV5923MG Servo Motor}
 \end{figure}
 
 \subsubsection{Arm Base}
