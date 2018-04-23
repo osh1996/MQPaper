@@ -176,11 +176,11 @@ The mechanical side of the base module is relatively simple because the physical
 \subsection{Code Library}
 The code library is another important part of what we did to make our arm work. It controls all of the electrical components via the sending of packets out to the base module over a Serial UART line. 
 
-\subsection{Maven}
+\subsubsection{Maven}
 Maven is a utility for Java-based projects that seeks to provide a uniform build system for the project. It accomplishes this by defining a project object model and a set of plugins that each Maven project shares. Therefore, Maven can provide a streamlined build environment for every instance of the project, allowing users to have the same build process across multiple different devices and environments. Maven could be compared to a flexible template for how a project should be arranged and what files should be included. We chose Maven for our Java project because it makes it much easier for our team to collaborate on the front-end side of the code.  It also allows us to package into our program libraries that we used in our project so that there are fewer dependencies that the end-user must download in order to use our software.
 %\cite{Maven}  https://maven.apache.org/what-is-maven.html ASK BEN ABOUT CITING
 
-\subsection{Program flow}
+\subsubsection{Program flow}
 %TODO: When we figure out that HID/UART stuff, clarify here
 
 %TODO: Add link to explain what a class and object are
@@ -203,7 +203,7 @@ Maven is a utility for Java-based projects that seeks to provide a uniform build
 
 \noindent Each joint would need to hold a reference to the JavaFX controller inside itself. Referencing such an architecture-specific piece of the program within the core of the program's logic would be bad for future portability of the code. 
 
-\subsection{Saving of Configuration}
+\subsubsection{Saving of Configuration}
 %TODO: Talk about Gson
 In order to store the information that we need to be persistent between different instances of the application, we used a library called Gson made by Google. This library's primary use is to take data and store it in a .json file, a kind of simplistic database.  We used this library to save the joint object which were the data containers about the configuration of the arm. All of the saving and loading is done via the GUI so that the user can either load information about an arm themselves, or they can change the values using the GUI text fields and save a new configuration when it needs updating. Doing so allows the user to always be able to either modify and update the constants inside the data container that is the Joint object and have those objects be saved and loaded during each runtime of the application. 
 
