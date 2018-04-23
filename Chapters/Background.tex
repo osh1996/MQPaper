@@ -80,7 +80,11 @@ Potentiometers are very commonly used to measure angular position due to their s
 \newline
 Hall Effect sensors are less commonly used, and consist of a bipolar magnet rotating above a hall effect sensor with the axis of rotation perpendicular to the plane of the sensor. Since there is no contact between the rotation and the sensor, these types of sensors have very long lifespans \cite{Pot_vs_Sensor}. Unfortunately, these sensors do not provide high resolution since they are susceptible to electromagnetic interference and temperature, and also have some hysteresis \cite{Choose_Position_Sensor}. \\
 \newline
-Optical encoders are another method of measuring angular position. These sensors consist of a beam of light that shines on a slotted disk so that as the disk rotates, the slots break the light beam. These sensors can have very high resolutions and are resistant to shock and vibrations \cite{Choose_Sensor_Technology}. Like magnetic sensors, these sensors have very long lifespans since there is no mechanical connection on the sensor \cite{Pot_vs_Sensor}. Unfortunately, these sensors are susceptible to foreign particles blocking the light beam from sensing the slots and causing incorrect readings. The most common kind of optical encoder, the Quadrature encoder, does not sense absolute position; it can only read relative position, meaning that a quadrature encoder would need to be combined with some other sensor in order for the robot to be able to sense its joint angles correctly. Other encoders called Absolute Optical Encoders do not have trouble reading absolute position, but they are prohibitively expensive. \cite{Choose_Position_Sensor}. 
+Optical encoders are another method of measuring angular position. These sensors consist of a beam of light that shines on a slotted disk so that as the disk rotates, the slots break the light beam. These sensors can have very high resolutions and are resistant to shock and vibrations \cite{Choose_Sensor_Technology}. Like magnetic sensors, these sensors have very long lifespans since there is no mechanical connection on the sensor \cite{Pot_vs_Sensor}. Unfortunately, these sensors are susceptible to foreign particles blocking the light beam from sensing the slots and causing incorrect readings. The most common kind of optical encoder, the Quadrature encoder, does not sense absolute position; it can only read relative position, meaning that a quadrature encoder would need to be combined with some other sensor in order for the robot to be able to sense its joint angles correctly. Other encoders called Absolute Optical Encoders do not have trouble reading absolute position, but they are prohibitively expensive. \cite{Choose_Position_Sensor}. \\
+\newline
+It's worth noting that limit switches can be used to provide information about the location of a joint. Limit switches give a different voltage depending on whether they are pressed or not. When a limit switch is placed at the edge of a particular mechanism's travel range, it becomes possible to determine when the mechanism has reached one of its limits of travel. \\
+\newline
+Limit switches can be used in conjunction with quadrature encoders (which only provide relative, rather than absolute, position) to create a system which is capable of determining its absolute position. The system would need to go through a homing process at startup whereby the mechanism travels until the limit switch is pressed, at which point the encoders treat their current position as "home".
 
 \begin{table}[H]
 	\begin{center}
@@ -92,7 +96,7 @@ Optical encoders are another method of measuring angular position. These sensors
 			\\ \hline
 			Potentiometer & \$ & Depends on ADC & Moderate & Short & Repeated motion at the same angle can lead to failure
 			\\ \hline
-			Encoder & \$\$\$ & Very High & Very High & Long & Cheap ones can't sense absolute position
+			Encoder & \$\$\$ & Very High & Very High & Long & Inexpensive encoders can't sense absolute position
 			\\ \hline
 			Hall Effect Sensor & \$\$ & High & High & Very Long & Requires special attention to surrounding magnetic fields when mounting
 			\\ \hline

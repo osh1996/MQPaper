@@ -211,7 +211,7 @@ Multithreading is the process of creating new threads in order to let code run i
 
 
 \subsubsection{Saving of Configuration}
-%TODO: Talk about Gson
+
 In order to store the information that we need to be persistent between different instances of the application, we used a library called Gson made by Google. This library's primary use is to take data and store it in a .json file, a kind of simplistic database.  We used this library to save the joint object which were the data containers about the configuration of the arm. All of the saving and loading is done via the GUI so that the user can either load information about an arm themselves, or they can change the values using the GUI text fields and save a new configuration when it needs updating. Doing so allows the user to always be able to either modify and update the constants inside the data container that is the Joint object and have those objects be saved and loaded during each runtime of the application. 
 
 
