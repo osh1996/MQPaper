@@ -573,7 +573,6 @@ CAN specification states that the CAN bus needs to be terminated on both ends by
 \noindent One method was to require the end user to attach a unique component, such as an end effector, at either end of the bus. This would effectively mean that an arm would always need a base module and an end effector to function properly. This rigid definition was not something we wanted to enforce on the end user, so instead we came up with a auto-disconnect circuit to disconnect the terminating resistor if another joint is added to the arm.
 
 \noindent The way this works is through a MOSFET switch, seen in Figure \ref{fig:can_terminate_circ}. The MOSFET (part number BS170) drain and source connect the CAN Hi and CAN Lo lines through a 120$\Omega$ resistor and the gate is pulled up to $V_{DD}$ through a 1l$\Omega$ resistor. When the next joint is connected, the gate is connected to ground and the MOSFET is opened, disconnecting the CAN Hi and CAN Lo lines. When there is no joint connected, the MOSFET is closed, effectively acting as a 5$\Omega$ resistor in series with the 120$\Omega$ resistor. This new 125$\Omega$ resistance is within tolerance in the CAN specifications which state that the resistance must be between 50$\Omega$ and 70$\Omega$.
-%todo: cite BS170 datasheet
 
 \begin{figure}[H]
 	\centering
@@ -602,11 +601,39 @@ The control system supports up to 6 joints at a time. In order to have a constan
 \end{figure}
 
 \subsection{Base Module}
-%TODO: this section
+The base module serves two main purposes. The first is to translate serial UART packets from the computer to the CAN packets for the joints. The second is to provide power and communication buses for the entire system. These two parts are crucial to the functionality of the arm.
+
 \subsubsection{Overview of Base Module Design}
-%TODO: put base module block diagram in
+The base module is pretty simple from a hardware standpoint. It mostly consists of two parts, the microcontroller and the power supply. A CAN transceiver is needed, in addition to the microcontroller, but after that there is no more hardware except connectors. A block diagram can be seen in Figure \ref{fig:base_block_diagram}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{base_block_diagram}
+	\caption{Block diagram of the base module}
+	\label{fig:base_block_diagram}
+\end{figure}
+
 \subsubsection{Base Module Code}
-%TODO: talk about RTOS, Init and runtime states, put CAN joint update pictures
+The base module is also running TI RTOS for TivaWare. The main reason for this was to multithread the code to simplify programming. By having multiple threads, the code can be compartmentalized into sections that handle different parts. Figure \ref{fig:base_code_flowchart} shows the code flowchart. There are two main states, initialization and runtime. During initialization, all of the constants for each joint are loaded in. These include CAN ID, encoder offset, and PID constants. Once all 6 joints have been initialized, the code transmits that information on the CAN bus and switches into the runtime state. 
+
+\noindent In the runtime state, the base module reads in joint angle updates from the computer, then sends them along to the corresponding joint. The joints then send back their actual joint angle, which is parsed back into serial and sent to the computer.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.4]{base_code_flowchart}
+	\caption{Base module code flowchart}
+	\label{fig:base_code_flowchart}
+\end{figure}
+
+\subsubsection{Power Rails}
+Since the arm is of a variable size, the power rail must also be modular enough to accomodate this. To solve this issue, a modular power rail was designed, and a diagram can be seen in Figure \ref{fig:power_rail}. The main rail is made up of 16 AWG wire and the connectors are rated for 15A continuous current draw. The power rail and CAN bus are very similar, but with smaller amperage JST connectors and thinner, 22 AWG wire.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{ModularPower}
+	\caption{Modular power rail for motor power}
+	\label{fig:power_rail}
+\end{figure}
 
 \subsection{Arm Structure}
 Arm structure is not something we wanted to fully define, since the end user is supposed to create their own arms, but there were some basic components that needed clarification. The first of these is that every arm must begin with a base module and have some combination of up to four additional joints connected.  This allows the end-user flexibility in how they want to construct the arm without allowing them to add too many joints.
