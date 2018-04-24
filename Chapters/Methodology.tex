@@ -45,18 +45,25 @@ The process of prototyping our fourth joint started with creating an interface s
 %TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
 
 \subsubsection{Motor Selection}
-%TODO: More words here
-Specs:\\ 
+
+The performance of a DC motor can be characterized by measuring several key values: the stall torque, the stall current, the free running RPM, and the free running current. It's important that all the values be measured when the motor is given the same input voltage.\\
+
 \noindent
-\indent 8.4V\\ 
-\indent 32.3 kg cm stall\\
-\indent 5.25 A stall\\
-\indent .1 seconds/60 degrees free running (100 rpm)\\
-\indent .23 A free running\\
+Specifications:\\
+\noindent
+\indent Voltage: 8.4V \\
+\indent Stall torque: 32.3 kg cm stall \\
+\indent Stall current: 5.25 A stall \\
+\indent Free running RPM: 0.1 seconds/60 degrees (100 rpm) \\
+\indent Free running current: 0.23 A \\
+
+
+
+
 
 \begin{table} [H]
 	\centering
-	\caption{HV5923MG Motor Data}
+	\caption{HV5923MG Motor Curve Data from experimental testing}
 	\label{tab:MotorData}
 	\begin{tabular}{|p{1cm}|p{1.2cm}|p{1.4cm}|p{1cm}|p{1cm}|p{1.5cm}|p{1cm}|p{1cm}|p{1.1cm}|}
 		\hline
@@ -128,7 +135,8 @@ The mechanical side of the base module is relatively simple because the physical
 	\label{fig:mount_and_holes}
 \end{figure}
 
-\noindent sBecause we have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the same position for each category of joint type to keeps these needs consistent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solution.
+\noindent We have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the same position for each category of joint type to keeps these needs consistent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solution.
+
 
 \subsection{Joint Control Board}
 The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design. %todo FINISH THISS
@@ -473,7 +481,7 @@ CAN specification states that the CAN bus needs to be terminated on both ends by
 \end{figure}
 
 \subsection{Printed Circuit Boards}
-A PCB was made for each of the major subsystems as a more final test. The subsystems for which a PCB was designed include the motor driver (both with and without a current sensor), load cell amplifier, CAN transceiver, and TM4C123GH6PM microcontroller. After these were verified to be working, a Boosterpack compatible design of the whole joint control board. 
+A PCB was made for each of the major subsystems as a more final test. The subsystems for which a PCB was designed include the motor driver (both with and without a current sensor), load cell amplifier, CAN transceiver, and TM4C123GH6PM microcontroller. After these were verified to be working, a Boosterpack compatible design of the whole joint control board.
 
 \noindent The motor driver PCB can be seen in Appendix \ref{app:motor_driver} and has the demultiplexer and a shunt resistor for triggering the automatic internal shutoff if the current gets too high. The motor driver with current sensor has a current sensor integrated in the board and can be seen in Appendix \ref{app:motor_driver_current}. The load cell amplifier has the LM358 op amp as well as the INA332 instrumentation amplifier and can be seen in Appendix \ref{app:load_cell_amp}. The CAN transceiver PCB was designed that contains the 6 necessary DIP switches, CAN transceiver, and auto-terminate circuit and can be seen in Appendix \ref{app:can_transceiver}. The joint control board Boosterpack has all of these components in a single PCB that mounts on top of the TM4C123GXL Launchpad and can be seen in Appendix \ref{app:joint_board_boosterpack}. All of these PCBs can be seen in Figure \ref{fig:pcbs}. A closeup of the joint control board Boosterpack attached to a Launchpad can be seen in Figure \ref{fig:jcb_boosterpack}.
 
@@ -491,7 +499,7 @@ A PCB was made for each of the major subsystems as a more final test. The subsys
 \label{fig:jcb_boosterpack}
 \end{figure}
 
-\noindent Small problems existed in some of the PCBs during the first revision. The CAN transceiver PCB has the $V_{CC}$ and GND pins swapped. Once this problem was identified, the traces were cut, wire soldered, and the schematic altered for another revision. The load cell amplifier PCB has a GND pin that was not connected to anything. The GND pin on the INA332 amplifier had an unconnected ground pin. This pin was connected with wire, and the PCB worked as expected. 
+\noindent Small problems existed in some of the PCBs during the first revision. The CAN transceiver PCB has the $V_{CC}$ and GND pins swapped. Once this problem was identified, the traces were cut, wire soldered, and the schematic altered for another revision. The load cell amplifier PCB has a GND pin that was not connected to anything. The GND pin on the INA332 amplifier had an unconnected ground pin. This pin was connected with wire, and the PCB worked as expected.
 
 \noindent The joint control board Boosterpack had the CAN transceiver $V_{CC}$ and GND pins swapped as well as needing the motor direction pin to be moved from one pin to another. This change came about due to the Launchpad construction. Two of the pins were connected internally but labeled differently, so the motor direction pin was swapped in code, the trace was cut, and wire was soldered to the new pin. These changes can be seen in Figure \ref{fig:jcb_boosterpack}. Another revision of the joint control board Boosterpack was made but not ordered due to time constraints.
 
