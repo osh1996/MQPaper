@@ -212,44 +212,79 @@ Preliminary joint control board design was done very early on in the project. Un
 	\label{fig:2nd_joint_board_block}
 \end{figure}
 
+\subsubsection{ADC Selection}
+The first design of the joint control board used a potentiometer to detect the joint angle and a current sense amplifier to detect the motor current. Both of these signals require an ADC to process, and the original microcontroller did not have a high resolution ADC on board, so an off board ADC was needed. Table \ref{tbl:ADC Selection} highlights the different ADCs that were evaluated before selecting one. The MCP3202, while not necessarily the best option from the chart, was selected since it has a very easy to use interface and was available in DIP package for easy testing. With the switch from the MSP430G2553 to the TM4C123GH6PM, the external ADC was no longer needed.
+
+\begin{table}[H]
+	\centering
+	\caption{ADC Selection}
+	
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		& Supply & Sampling & SCLK & \\
+		Part name & Voltage (V) & rate (MHz) & Freq (MHz) & Price (\$) \\
+		\hline
+		ADS7042 & 3.3 & 1 & 16 & 2.65 \\
+		
+		ADS7043 & 3.3 & 1 & 16 & 2.65 \\
+		
+		ADS7044 & 3.3 & 1 & 16 & 2.65 \\
+		
+		ADC121S021 & 3.3, 5 & 0.2 & 4 & 2.85 \\
+		
+		ADC121S051 & 3.3, 5 & 0.5 & 4 & 3.31 \\
+		
+		ADC121S101 & 3.3, 5 & 1 & 4 & 3.39 \\
+		
+		ADC7476 & 3.3, 5 & 1 & 20 & 3.41 \\
+		
+		MCP3202 & 3.3, 5 & 0.1 & 1.6 & 2.31 \\
+		
+		MAX11665 & 3.3 & 0.5 & 8 & 2.73 \\
+		\hline
+	\end{tabular}
+	
+	\label{tbl:ADC Selection}
+\end{table}
+
 \subsubsection{Preliminary Price Breakdown}
 Initially, one of the goals of this project was to produce a very low cost joint board. An estimate that matches the joint board block diagram from Figure \ref{fig:nice_prelim_joint_board_block} can be seen in Table \ref{tbl:Summary of Parts Selection}.
 \begin{table}[H]
-	\centering
-	\caption{Summary of Parts Selection}
+\centering
+\caption{Summary of Parts Selection}
+
+\begin{tabular}{|c|c|c|c|}
 	
-	\begin{tabular}{|c|c|c|c|}
-		
-		\hline
-		Function & Part name & Price (qty: 1) & Price (qty: 1k) \\
-		\hline
-		
-		CAN Controller & MCP2515 & \$1.87 & \$1.42 \\
-		
-		CAN Transceiver & MCP2561 & \$0.90 & \$0.68 \\
-		
-		ADC & MCP3202 & \$2.61 & \$1.98 \\
-		
-		MCU & MSP430G2553 & \$2.41 & \$1.18 \\
-		
-		Motor Controller & DRV8872 & \$2.17 & \$1.06 \\
-		
-		3.3V Voltage Regulator & LP2950-33 & \$0.47 & \$0.13 \\
-		
-		Current Sensor & ACS723LLC10AB & \$5.53 & \$2.36 \\
-		
-		Encoder & AS5055a & \$8.07 & \$5.48 \\
-		\hline
-		\hline
-		Price (qty: 1) & \$24.03 & & \\
-		
-		Price (qty: 1k) & \$14.30 & & \\
-		\hline
-		
-	\end{tabular}
+	\hline
+	Function & Part name & Price (qty: 1) & Price (qty: 1k) \\
+	\hline
 	
-	\label{tbl:Summary of Parts Selection}
-\end{table}
+	CAN Controller & MCP2515 & \$1.87 & \$1.42 \\
+	
+	CAN Transceiver & MCP2561 & \$0.90 & \$0.68 \\
+	
+	ADC & MCP3202 & \$2.61 & \$1.98 \\
+	
+	MCU & MSP430G2553 & \$2.41 & \$1.18 \\
+	
+	Motor Controller & DRV8872 & \$2.17 & \$1.06 \\
+	
+	3.3V Voltage Regulator & LP2950-33 & \$0.47 & \$0.13 \\
+	
+	Current Sensor & ACS723LLC10AB & \$5.53 & \$2.36 \\
+	
+	Encoder & AS5055a & \$8.07 & \$5.48 \\
+	\hline
+	\hline
+	Price (qty: 1) & \$24.03 & & \\
+	
+	Price (qty: 1k) & \$14.30 & & \\
+	\hline
+	
+\end{tabular}
+
+\label{tbl:Summary of Parts Selection}
+\end{table}	
 
 \subsubsection{Motor Driver}
 The DC motor driver selected was the DRV8872. This driver takes in two inputs, in1 and in2, which affect the output much like inputs to an H-bridge.The exception is when both inputs are high. In this case, the inputs are pulled together as a motor break. A truth table can be seen in Table \ref{tbl:drv8872-truth6}.
@@ -277,7 +312,8 @@ The DC motor driver selected was the DRV8872. This driver takes in two inputs, i
 	\caption{Motor Driver Comparison}
 \begin{tabular}{|c|c|c|c|}
 	\hline
-	Part name  & Peak Current (A) & Continuous current (A) & Control method \\
+	 & Peak & Continuous & \\
+	Part name  & Current (A) & current (A) & Control method \\
 	\hline
 	
 	LMD18245 & 6 & 3 & direction, brake \\
@@ -308,7 +344,9 @@ rpm = \frac{1 rev}{12 ticks} * \frac{1}{5} * \frac{60 seconds}{1 minute}
 
 
 \subsubsection{Demultiplexer}
-The original demultiplexer selected for the joint board (SN74LVC1G19) did not output the correct values to drive the motor driver (DRV8872). The demultiplexer output can be seen in Table  and the motor driver inputs can be seen in Table . When the EN pin was pulled high, both outputs would also be driven high. This effect is undesirable since, when given a PWM signal, this would cause the motor driver to turn then brake then turn again as opposed to the desired turn then coast then turn. To solve this problem, a different chip (SN74LVC1G18) was selected. The truth table for this chip can be seen in Table \ref{tbl:sn74lvc1g18-truth}.
+A demultiplexer was not necessary for the operation of the joint board. However, it simplifies the motor control signal from two PWM lines to one PWM line and a digital output, speed and direction. Since it was fairly simple to implement, the additional complexity in the circuit was added and the software was simplified by only needing to set up a single channel on the PWM controller.
+
+\noindent The original demultiplexer selected for the joint board (SN74LVC1G19) did not output the correct values to drive the motor driver (DRV8872). The demultiplexer output can be seen in Table  and the motor driver inputs can be seen in Table . When the EN pin was pulled high, both outputs would also be driven high. This effect is undesirable since, when given a PWM signal, this would cause the motor driver to turn then brake then turn again as opposed to the desired turn then coast then turn. To solve this problem, a different chip (SN74LVC1G18) was selected. The truth table for this chip can be seen in Table \ref{tbl:sn74lvc1g18-truth}.
 \begin{table}[H]
 	\centering
 	\caption{SN74LVC1G18 truth table}
@@ -346,6 +384,10 @@ G = 5 + 5(\frac{R_1}{R_2})
 
 \noindent The INA332 needs a voltage reference to use as the 0V differential output. Initially, two 1k$\Omega$ resistors were used to apply this voltage. This caused the output to change nonlinearly with the input voltage. The resistors were replaced with a LM358 dual operational amplifier, configured as a voltage buffer with the input connected to a potentiometer. The INA332 inputs were connected to ground and the LM358 buffer potentiometer was adjusted to set the 0V output to  $\frac{1}{2} V_{cc}$. This voltage was 1.846V. Instead of a potentiometer, two resistors were used to create this 1.846V offset.
 
+\subsubsection{Hall Effect Encoder}
+An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
+%TODO: Finish paragraph
+
 \subsubsection{TM4C123GXL Launchpad}
 Selecting a microcontroller was a key part of making the joint control board. Without a capable MCU, the joint board would not be able to function as we want it to, but buying the best microcontroller on the market can be costly. The EK-TM4C123GXL is an ARM Coretex M4f-based microcontroller evaluation kit from TI that has many peripherals to allow us to control the joint board without buying many external peripherals. The perihperals on this chip that we will need include a CAN controller, 12-bit ADC, USB controller, SSI controller, PWM controller, and many GPIO. These perihperals were implemented separately with a test circuit configured to verify that each peripheral was functioning correctly.
 
@@ -353,50 +395,11 @@ Selecting a microcontroller was a key part of making the joint control board. Wi
 
 \noindent As a temporary stand in for the AS5055 absolute Hall effect encoder to test the SSI peripheral, a MCP3202 12-bit, 2 channel ADC was used. Both devices use SPI to communicate their sensor data back to the MCU, and the packets are similar in structure. Some differences between the two that can be changed are a maximum sample rate for the AS5055 of ~1ms as opposed to the few SCLK cycle delays for the MCP3202. The AS5055 has a maximum SCLK frequency of up to 10MHz at 3.3V while the MCP3202 has a limit of 900kHz at 3.3V. 
 
-
 \noindent The potentiometer was connected to PE0 which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s.
 
-\begin{table}[H]
-	\centering
-	\caption{ADC Selection}
-
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-& Supply & Sampling & SCLK & \\
-Part name & Voltage (V) & rate (MHz) & Freq (MHz) & Price (\$) \\
-\hline
-ADS7042 & 3.3 & 1 & 16 & 2.65 \\
-
-ADS7043 & 3.3 & 1 & 16 & 2.65 \\
-
-ADS7044 & 3.3 & 1 & 16 & 2.65 \\
-
-ADC121S021 & 3.3, 5 & 0.2 & 4 & 2.85 \\
-
-ADC121S051 & 3.3, 5 & 0.5 & 4 & 3.31 \\
-
-ADC121S101 & 3.3, 5 & 1 & 4 & 3.39 \\
-
-ADC7476 & 3.3, 5 & 1 & 20 & 3.41 \\
-
-MCP3201 & 3.3, 5 & 0.1 & 1.6 & 2.31 \\
-
-MAX11665 & 3.3 & 0.5 & 8 & 2.73 \\
-\hline
-\end{tabular}
-
-\label{tbl:ADC Selection}
-\end{table}
-
-\noindent Note: The MCP3202 is functionally the same as the MCP3201, except it has a second input channel.
-
-
-\subsubsection{Hall Effect Encoder}
-An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
-%TODO: Finish paragraph
-
-
 \subsection{CAN Bus}
+The CAN bus is the spine of the control system, carrying messages from the base to each joint and back from each of the joints to the base. Unit tests and careful integration were done to 
+
 \subsubsection{Determining Joint Placement with Message ID}
 CAN bus will be used to communicate between the base and joints. A limitation of CAN is that there is no way of determining the position of a module on the bus. This is important for controlling a robot arm since joint 1 is controlled differently from joint 2, etc. In order to determine the position of a joint board on the bus, another method is needed. The CAN message ID contains 11 bits in the standard frame.
 
