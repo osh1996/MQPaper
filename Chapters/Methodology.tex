@@ -11,6 +11,125 @@ Many engineering decisions were made during the course of this project. Decision
 	\label{fig:system_block_diagram}
 \end{figure}
 
+\subsection{Fourth Joint and Existing Arm}
+%TODO: insert solidworks .dwg files and place them in the correct spot
+In order to show that our control system can be integrated with other arms, we designed a fourth joint to connect to an existing arm. By showing that we can add a newly designed joint to our existing arm, we are creating a proof-of-concept that shows the versatility of our control system.  The design of the fourth joint was done in Solidworks, a software that allows users to design objects in a 3-D space \cite{Solidworks}. Once we had designed the fourth link, we moved forward to the rapid-prototyping stage where we took our parts designed in Solidworks and converted them to 3-D printable models.  We then used the software Cura \cite{Cura} and the Lulzbot Taz 6 3-D printer \cite{Taz6} to fabricate a first iteration of our fourth joint.  From here we continued to refine our parts and re-print pieces with tighter tolerances until they came together to make a fourth joint that interfaces with our control system.
+
+\subsubsection{Fourth Joint Design}
+The process of prototyping our fourth joint started with creating an interface so that we can connect it to the already existing arm.  We decided for the sake of simplicity to attach our fourth joint where the current end-of-arm-tooling would normally connect. \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[angle=90, scale=0.1]{current_arm_connector}
+	\caption{Current Arm End Effector Mount}
+	\label{Current Arm Encoder Mount}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.07]{Joint_4_Side}
+	\caption{Side View of Final Removable Joint}
+	\label{fig:Side View of Joint 4}
+\end{figure}
+
+\noindent Our second decision was to create a joint that is actuated using a brushed DC motor to prove that we can control DC motors in addition to the servos that already exist on the arm.  Next, we decided that since most of the joints currently on the arm provide rotation perpendicular to the z-axis of the actuator, we wanted a joint that provides parallel rotation. To accomplish this we removed the control logic from a servo that already was used on the arm, converting it into a brushed DC motor. Next, we designed a direct-drive mount for the motor we fabricated so that the output shaft would rotate along the motor's axis of rotation.  We built a mounting for the motor and a structure to provide support for both radial and axial load on the shaft. This structure made use of multiple radial bearings, placed to keep the shaft in line and eliminate any friction between moving and static pieces of the joint.  We also included a thrust bearing on the main shaft in order to stop thrust loads from being placed directly on the servo.  Finally, we designed an idler-shaft that sits in two bearings so that it can free rotate with negligible friction. The purpose of this idler shaft is to rotate in a 1:1 gear ratio with the main shaft using a timing belt to connect the two shafts.  At the bottom of the idler shaft there is a magnet whose changing magnetic field is read by a Hall effect sensor mounted onto the bottom of the fourth joint so that it sits exactly 1mm from the magnet, allowing for optimal position reading.  \\
+
+\subsubsection{Fourth Joint Prototyping}
+The process of prototyping our fourth joint started with creating an interface so that we can connect it to the already existing arm.  We decided for the sake of simplicity to attach our fourth joint where the current end-of-arm-tooling would normally connect. %TODO: MOVE UP
+
+\noindent To create a prototype of our fourth joint, we determined the mechanical requirements of our arm and worked backwards to create a rapid prototyping model (RPM).  RPMs are usually CAD models which are able to be turned into a functional model using a 3-D printer. or other method.  Once the functional model was 3-D printed, we would assemble the parts and test how they all fit together.  With each new functional model we revised our RPM and printed a new functional model in order to meet the requirements for our fourth joint. This process of building, revising based on testing a physical prototype was only made possible due to the advances in recent years in 3-D printing technology making it feasible to create these prototypes so quickly while still having them be robust. 
+
+\subsubsection{3-D Printing}
+3-D printing is convenient because it allows the user to manufacture parts in a novel way. Overall, we chose to 3-D print our fourth joint because it was what we were most familiar with and we had easy access to multiple 3-D printers.  While the process of 3-D printing a part might not be as accurate as other more conventional methods of machining parts, it is a much easier method to learn and has a much quicker turnaround time. For our choice of 3-D printer, we used the LulzBot Taz 6 \cite{Taz6} with a single extruder head (Version 2.1) and 2.65mm filament. This printer is readily available to us through the school and the resolution of the printer was fine enough that it was easily able to achieve the tight tolerances that we needed to print parts such as the timing belt teeth.    
+
+%TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
+
+\subsubsection{Motor Selection}
+%TODO: More words here
+Specs:\\ 
+\noindent
+\indent 8.4V\\ 
+\indent 32.3 kg cm stall\\
+\indent 5.25 A stall\\
+\indent .1 seconds/60 degrees free running (100 rpm)\\
+\indent .23 A free running\\
+
+\begin{table} [H]
+	\centering
+	\caption{HV5923MG Motor Data}
+	\label{tab:MotorData}
+	\begin{tabular}{|p{1cm}|p{1.2cm}|p{1.4cm}|p{1cm}|p{1cm}|p{1.5cm}|p{1cm}|p{1cm}|p{1.1cm}|}
+		\hline
+		Speed (RPM) & Torque (N-m) & Torque (in-lbf) & Current (A) & $P_{out}$ (W) & Efficiency (\%) & $P_{in}$ (W) & Heat (W) & back-EMF (V) \\
+		\hline
+		
+		0 & 3.16 & 27.98 & 5.25 & 0 & 0 & 44.1 & 44.1 & 0 \\
+		
+		7 & 2.94 & 26.02 & 4.9 & 2.15 & 5.24 & 41.15 & 38.99 & 0.56 \\
+		
+		13 & 2.75 & 24.34 & 4.6 & 3.74 & 9.69 & 38.62 & 34.87 & 1.04 \\
+		
+		20 & 2.53 & 22.38 & 4.25 & 5.3 & 14.85 & 35.67 & 30.37 & 1.61 \\
+		
+		27 & 2.31 & 20.42 & 3.89 & 6.52 & 19.94 & 32.71 & 26.19 & 2.17 \\
+		
+		33 & 2.12 & 18.74 & 3.59 & 7.32 & 24.24 & 30.18 & 22.87 & 2.65 \\
+		
+		40 & 1.9 & 16.79 & 3.24 & 7.94 & 29.17 & 27.23 & 19.29 & 3.21 \\
+		
+		47 & 1.68 & 14.83 & 2.89 & 8.24 & 33.96 & 24.28 & 16.04 & 3.78 \\
+		
+		53 & 1.49 & 13.15 & 2.59 & 8.24 & 37.9 & 21.75 & 13.51 & 4.26 \\
+		
+		60 & 1.26 & 11.19 & 2.24 & 7.94 & 42.25 & 18.8 & 10.86 & 4.82 \\
+		
+		67 & 1.04 & 9.23 & 1.89 & 7.32 & 46.18 & 15.85 & 8.53 & 5.38 \\
+		
+		73 & 0.85 & 7.55 & 1.59 & 6.52 & 48.99 & 13.32 & 6.79 & 5.86 \\
+		
+		80 & 0.63 & 5.6 & 1.23 & 5.3 & 51.09 & 10.37 & 5.07 & 6.43 \\
+		
+		87 & 0.41 & 3.64 & 0.88 & 3.74 & 50.49 & 7.41 & 3.67 & 6.99 \\
+		
+		93 & 0.22 & 1.96 & 0.58 & 2.15 & 44.12 & 4.88 & 2.73 & 7.47 \\
+		
+		100 & 0 & 0 & 0.23 & 0 & 0 & 1.93 & 1.93 & 8.03 \\
+		\hline
+		
+	\end{tabular}
+	
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics{motor}
+	\caption{HV5923MG Servo Motor}
+	\label{fig:HV5923MG Servo Motor}
+\end{figure}
+
+
+\subsubsection{Arm Base}
+% Talk about requirements for base
+% take in new joint data at certain speeds
+% output new joint data at certain speeds
+The mechanical side of the base module is relatively simple because the physical structure comes from the pre-existing arm. In order to make this compatible with our controls system, all we have to do is mount our joint and encoder boards to it. This is fairly simple since we use a slightly modified version of the encoder board on the existing arm with the same mounting scheme. Our joint board mounting scheme focused around mounting each board in a place where it would not be impeded by the movement of the arm during runtime. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{mount_back_view}
+	\caption{TM4C123G to arm mount}
+	\label{fig:mount_back_view}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{mount_and_holes}
+	\caption{Mounting holes on arm and mounted TM4C123G}
+	\label{fig:mount_and_holes}
+\end{figure}
+
+\noindent sBecause we have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the same position for each category of joint type to keeps these needs consistent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solution.
+
 \subsection{Joint Control Board}
 The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design.
 
@@ -335,125 +454,6 @@ CAN specification states that the CAN bus needs to be terminated on both ends by
 
 \subsection{Arm Structure}
 Arm structure is not something we wanted to fully define, since the end user is supposed to create their own arms, but there were some basic components that needed clarification. The first of these is that every arm must begin with a base module and have some combination of up to four additional joints connected.  This allows the end-user flexibility in how they want to construct the arm without allowing them to add too many joints.
-
-\subsection{Fourth Joint}
-%TODO: insert solidworks .dwg files and place them in the correct spot
-In order to show that our control system can be integrated with other arms, we designed a fourth joint to connect to an existing arm. By showing that we can add a newly designed joint to our existing arm, we are creating a proof-of-concept that shows the versatility of our control system.  The design of the fourth joint was done in Solidworks, a software that allows users to design objects in a 3-D space \cite{Solidworks}. Once we had designed the fourth link, we moved forward to the rapid-prototyping stage where we took our parts designed in Solidworks and converted them to 3-D printable models.  We then used the software Cura \cite{Cura} and the Lulzbot Taz 6 3-D printer \cite{Taz6} to fabricate a first iteration of our fourth joint.  From here we continued to refine our parts and re-print pieces with tighter tolerances until they came together to make a fourth joint that interfaces with our control system.
-
-\subsubsection{Fourth Joint Design}
-The process of prototyping our fourth joint started with creating an interface so that we can connect it to the already existing arm.  We decided for the sake of simplicity to attach our fourth joint where the current end-of-arm-tooling would normally connect. \\
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[angle=90, scale=0.1]{current_arm_connector}
-	\caption{Current Arm End Effector Mount}
-	\label{Current Arm Encoder Mount}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.07]{Joint_4_Side}
-\caption{Side View of Final Removable Joint}
-\label{fig:Side View of Joint 4}
-\end{figure}
-
-\noindent Our second decision was to create a joint that is actuated using a brushed DC motor to prove that we can control DC motors in addition to the servos that already exist on the arm.  Next, we decided that since most of the joints currently on the arm provide rotation perpendicular to the z-axis of the actuator, we wanted a joint that provides parallel rotation. To accomplish this we removed the control logic from a servo that already was used on the arm, converting it into a brushed DC motor. Next, we designed a direct-drive mount for the motor we fabricated so that the output shaft would rotate along the motor's axis of rotation.  We built a mounting for the motor and a structure to provide support for both radial and axial load on the shaft. This structure made use of multiple radial bearings, placed to keep the shaft in line and eliminate any friction between moving and static pieces of the joint.  We also included a thrust bearing on the main shaft in order to stop thrust loads from being placed directly on the servo.  Finally, we designed an idler-shaft that sits in two bearings so that it can free rotate with negligible friction. The purpose of this idler shaft is to rotate in a 1:1 gear ratio with the main shaft using a timing belt to connect the two shafts.  At the bottom of the idler shaft there is a magnet whose changing magnetic field is read by a Hall effect sensor mounted onto the bottom of the fourth joint so that it sits exactly 1mm from the magnet, allowing for optimal position reading.  \\
-
-\subsubsection{Fourth Joint Prototyping}
-The process of prototyping our fourth joint started with creating an interface so that we can connect it to the already existing arm.  We decided for the sake of simplicity to attach our fourth joint where the current end-of-arm-tooling would normally connect. %TODO: MOVE UP
-
-\noindent To create a prototype of our fourth joint, we determined the mechanical requirements of our arm and worked backwards to create a rapid prototyping model (RPM).  RPMs are usually CAD models which are able to be turned into a functional model using a 3-D printer. or other method.  Once the functional model was 3-D printed, we would assemble the parts and test how they all fit together.  With each new functional model we revised our RPM and printed a new functional model in order to meet the requirements for our fourth joint. This process of building, revising based on testing a physical prototype was only made possible due to the advances in recent years in 3-D printing technology making it feasible to create these prototypes so quickly while still having them be robust. 
-
-\subsubsection{3-D Printing}
-3-D printing is convenient because it allows the user to manufacture parts in a novel way. Overall, we chose to 3-D print our fourth joint because it was what we were most familiar with and we had easy access to multiple 3-D printers.  While the process of 3-D printing a part might not be as accurate as other more conventional methods of machining parts, it is a much easier method to learn and has a much quicker turnaround time. For our choice of 3-D printer, we used the LulzBot Taz 6 \cite{Taz6} with a single extruder head (Version 2.1) and 2.65mm filament. This printer is readily available to us through the school and the resolution of the printer was fine enough that it was easily able to achieve the tight tolerances that we needed to print parts such as the timing belt teeth.    
-
-%TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
-
-\subsubsection{Motor Selection}
-%TODO: More words here
-Specs:\\ 
-\noindent
-\indent 8.4V\\ 
-\indent 32.3 kg cm stall\\
-\indent 5.25 A stall\\
-\indent .1 seconds/60 degrees free running (100 rpm)\\
-\indent .23 A free running\\
-
-\begin{table} [H]
-	\centering
-	\caption{HV5923MG Motor Data}
-	\label{tab:MotorData}
-	\begin{tabular}{|p{1cm}|p{1.5cm}|p{1.5cm}|p{1.2cm}|p{1cm}|p{1.5cm}|p{1cm}|p{1cm}|p{2cm}|}
-\hline
-Speed (RPM) & Torque (N-m) & Torque (in-lbf) & Current (A) & Pout (W) & Efficiency (\%) & Pin (W) & Heat (W) & back-EMF (V) \\
-\hline
-
-0 & 3.16 & 27.98 & 5.25 & 0 & 0 & 44.1 & 44.1 & 0 \\
-
-7 & 2.94 & 26.02 & 4.9 & 2.15 & 5.24 & 41.15 & 38.99 & 0.56 \\
-
-13 & 2.75 & 24.34 & 4.6 & 3.74 & 9.69 & 38.62 & 34.87 & 1.04 \\
-
-20 & 2.53 & 22.38 & 4.25 & 5.3 & 14.85 & 35.67 & 30.37 & 1.61 \\
-
-27 & 2.31 & 20.42 & 3.89 & 6.52 & 19.94 & 32.71 & 26.19 & 2.17 \\
-
-33 & 2.12 & 18.74 & 3.59 & 7.32 & 24.24 & 30.18 & 22.87 & 2.65 \\
-
-40 & 1.9 & 16.79 & 3.24 & 7.94 & 29.17 & 27.23 & 19.29 & 3.21 \\
-
-47 & 1.68 & 14.83 & 2.89 & 8.24 & 33.96 & 24.28 & 16.04 & 3.78 \\
-
-53 & 1.49 & 13.15 & 2.59 & 8.24 & 37.9 & 21.75 & 13.51 & 4.26 \\
-
-60 & 1.26 & 11.19 & 2.24 & 7.94 & 42.25 & 18.8 & 10.86 & 4.82 \\
-
-67 & 1.04 & 9.23 & 1.89 & 7.32 & 46.18 & 15.85 & 8.53 & 5.38 \\
-
-73 & 0.85 & 7.55 & 1.59 & 6.52 & 48.99 & 13.32 & 6.79 & 5.86 \\
-
-80 & 0.63 & 5.6 & 1.23 & 5.3 & 51.09 & 10.37 & 5.07 & 6.43 \\
-
-87 & 0.41 & 3.64 & 0.88 & 3.74 & 50.49 & 7.41 & 3.67 & 6.99 \\
-
-93 & 0.22 & 1.96 & 0.58 & 2.15 & 44.12 & 4.88 & 2.73 & 7.47 \\
-
-100 & 0 & 0 & 0.23 & 0 & 0 & 1.93 & 1.93 & 8.03 \\
-\hline
-
-\end{tabular}
-
-\end{table}
-
-\begin{figure}[H]
-\centering
-\includegraphics{motor}
-\caption{HV5923MG Servo Motor}
-\label{fig:HV5923MG Servo Motor}
-\end{figure}
-
-
-\subsubsection{Arm Base}
-% Talk about requirements for base
-% take in new joint data at certain speeds
-% output new joint data at certain speeds
-The mechanical side of the base module is relatively simple because the physical structure comes from the pre-existing arm. In order to make this compatible with our controls system, all we have to do is mount our joint and encoder boards to it. This is fairly simple since we use a slightly modified version of the encoder board on the existing arm with the same mounting scheme. Our joint board mounting scheme focused around mounting each board in a place where it would not be impeded by the movement of the arm during runtime. 
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{mount_back_view}
-	\caption{TM4C123G to arm mount}
-	\label{fig:mount_back_view}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{mount_and_holes}
-	\caption{Mounting holes on arm and mounted TM4C123G}
-	\label{fig:mount_and_holes}
-\end{figure}
-
-Because we have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the same position for each category of joint type to keeps these needs consistent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solution.
 
 \subsection{Code Library}
 The code library is another important part of what we did to make our arm work. It controls all of the electrical components via the sending of packets out to the base module over a Serial UART line. It handle a lot of the more involved calculations for controlling the arm like the forward and inverse kinematics.  
