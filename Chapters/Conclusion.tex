@@ -4,42 +4,48 @@
 % How this will be applicable
 % How it can be improved
 
-thread
-comms protocol
-design PCB
-schedule on RTOS
+The goal of this project was to create a proof of concept for a platform that can prototype multiple different robot arms. We feel that we accomplished the most of the goals defined in the Acceptance Criteria through our proof of concept. This project spanned a broad swathe of engineering disciplines and as such required lots of work in each of the three "pillars of robotics". Mechanical engineering, electrical engineering and computer science all played important roles in the design and implementation of our robotic arm. We made use of our respective backgrounds in this area in addition to a large amount of self-study required to fully realize our goal. \\
+\newline
+\noindent From the start of this project, we knew that it would not be an trivial accomplishment to make a robot arm able to be modularly reconfigured. In this project, we defined the goals that we wanted to achieve and tried to clearly lay them out in the Acceptance Criteria. Very few of our ideas came from external sources because we decided to create a robotic arm that can easily be disassembled and reconfigured. It was clear to us at the beginning of the project that if we were to meet this goal, we would have to approach many complex engineering problems and solve them using innovative and creative methods. In the end, we were able to make our arm, but not without running into many errors which can be expected with a project of this scope. There were a few roadblocks which impeded progress and led to executive decisions to change how we approached certain problems. Principal amongst these was a project redesign in response to a change in project administration late A term.  This redesign, was not just a test of our dedication to the project but our dedication to our goals. It turned out that due to the shortened time span which we had to complete this project, we had to rethink some goals and scale others back so that they were achievable. \\
 
 
 
-design an educational platform
-We made a platform that could, in principle, be used for education
-Structure of final project met original goals
-Staffing circumstances and time constraints made achieving the original goal difficult, but we did in fact get a proof of concept out there. It is achievable
-
-CAD -> 3D print, iterate
-
-UML -> code, iterate
-
-Design + read datasheets -> breadboard -> miniPCB -> full PCB
-
-Enormous roadblocks:    CAN. HID. Project redesign. Linux / Windows compatibility: solidworks doesn't run on linux. Code written on Windows for Tiva didn't work on Linux. 3D printer's tolerance needed to be iterated many times. 3D printer settings needed to be rewritten from scratch.
-
-Turns out joint boards need to be powered from USB port, not just motor & logic power. The fix is to power the boards at 5 volts on the logic line.
-
-Embedded code led to problems that couldn't be solved by thinking, but rather by brute force elimination of possible root causes
-
-Debugging matrix
-
-
-You design the project. Hardest kind of MQP. You tell the advisors what you're doing and then you do it. When you hit a roadblock it's not just a question of how can we overcome it, but also a question of, isit worthwhile to persevere or should we aim for more achievable goals?
-
-
-The Engineering Process: Research. Plan. Design. Build. Test. Iterate.
-
-At its heart, this project embodied the three pillars of Robotics Engineering. We got to use so many skills. In the end we made something that we feel is a valid proof of concept.
-
-We spent a significant amount of time defining project deliverables (Outlined in Appendix \ref),  but due to changes and project organization, the goals had to be revised.
-
-
-
-We achieved many of our basic goals. There is still much to be done to accomplish the full scope of the original project narrative. Future iterations of this project could focus on adding higher level functionality to our platform. An example would be utilizing the torque sensing capability or other sensors to add additional control methods, such as torque control and gravity compensation, or maybe even velocity control.
+%thread
+%comms protocol
+%design PCB
+%schedule on RTOS
+%
+%
+%
+%design an educational platform
+%We made a platform that could, in principle, be used for education
+%Structure of final project met original goals
+%Staffing circumstances and time constraints made achieving the original goal difficult, but we did in fact get a proof of concept out there. It is achievable
+%
+%CAD -> 3D print, iterate
+%
+%UML -> code, iterate
+%
+%Design + read datasheets -> breadboard -> miniPCB -> full PCB
+%
+%Enormous roadblocks:    CAN. HID. Project redesign. Linux / Windows compatibility: solidworks doesn't run on linux. Code written on Windows for Tiva didn't work on Linux. 3D printer's tolerance needed to be iterated many times. 3D printer settings needed to be rewritten from scratch.
+%
+%Turns out joint boards need to be powered from USB port, not just motor & logic power. The fix is to power the boards at 5 volts on the logic line.
+%
+%Embedded code led to problems that couldn't be solved by thinking, but rather by brute force elimination of possible root causes
+%
+%Debugging matrix
+%
+%
+%You design the project. Hardest kind of MQP. You tell the advisors what you're doing and then you do it. When you hit a roadblock it's not just a question of how can we overcome it, but also a question of, isit worthwhile to persevere or should we aim for more achievable goals?
+%
+%
+%The Engineering Process: Research. Plan. Design. Build. Test. Iterate.
+%
+%At its heart, this project embodied the three pillars of Robotics Engineering. We got to use so many skills. In the end we made something that we feel is a valid proof of concept.
+%
+%We spent a significant amount of time defining project deliverables (Outlined in Appendix \ref),  but due to changes and project organization, the goals had to be revised.
+%
+%
+%
+%We achieved many of our basic goals. There is still much to be done to accomplish the full scope of the original project narrative. Future iterations of this project could focus on adding higher level functionality to our platform. An example would be utilizing the torque sensing capability or other sensors to add additional control methods, such as torque control and gravity compensation, or maybe even velocity control.
