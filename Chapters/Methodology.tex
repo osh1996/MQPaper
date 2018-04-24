@@ -158,7 +158,8 @@ The DC motor driver selected was the DRV8872. This driver takes in two inputs, i
 	\caption{Motor Driver Comparison}
 \begin{tabular}{|c|c|c|c|}
 	\hline
-	Part name  & Peak Current (A) & Continuous current (A) & Control method \\
+	
+Part name  & Peak Current (A) & Continuous current (A) & Control method \\
 	\hline
 	
 	LMD18245 & 6 & 3 & direction, brake \\
@@ -354,7 +355,7 @@ The process of prototyping our fourth joint started with creating an interface s
 %TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
 
 \subsubsection{Motor Selection}
-%TODO: More words here
+%TODO: More words here 
 Specs:\\ 
 \noindent
 \indent 8.4V\\ 
@@ -437,10 +438,7 @@ The mechanical side of the base module is relatively simple because the physical
 	\label{fig:mount_and_holes}
 \end{figure}
 
-Because we have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the same position for each category of joint type to keeps these needs consistent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solution.
-
-\subsection{Code Library}
-The code library is another important part of what we did to make our arm work. It controls all of the electrical components via the sending of packets out to the base module over a Serial UART line. It handle a lot of the more involved calculations for controlling the arm like the forward and inverse kinematics.  
+Because we have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the saome position for each category of joint type to keeps these needs consstent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solutioncombination of up to four additional joints connected.  This allows the end-user flexibility in how they want to construct thef the electrical components via the sending of packets out to the base module over a Serial UART line. It handle a lot of the more involved calculations for controlling the arm like the forward and inverse kinematics.  
 
 \subsubsection{Maven}
 Maven is a utility for Java-based projects that seeks to provide a uniform build system for the project. It accomplishes this by defining a project object model and a set of plugins that each Maven project shares. Therefore, Maven can provide a streamlined build environment for every instance of the project, allowing users to have the same build process across multiple different devices and environments. Maven could be compared to a flexible template for how a project should be arranged and what files should be included. We chose Maven for our Java project because it makes it much easier for our team to collaborate on the front-end side of the code.  It also allows us to package into our program libraries that we used in our project so that there are fewer dependencies that the end-user must download in order to use our software \cite{maven}.
@@ -457,7 +455,7 @@ Maven is a utility for Java-based projects that seeks to provide a uniform build
 \end{figure}
 
 %TODO do something more with this sentence
-\noindent The front-end program running on the PC is written in Java. We used JavaFX to make the GUI. We chose to write this part of the program in Java because of the speed and reliability of a language that has many libraries and excellent Interactive Development Environments.  
+\noindent The front-end program running on the PC is written in Java. We used JavaFX to make the GUI. We chose to write this part of the program in Java because of the speed and reliability of a language that has many libraries and excellent Interactive Development Environments. 
 
 \noindent The main class starts the JavaFX Project. The JavaFX Project holds an list of joints which lists all the joints, which contains data about how the arm is configured. Each Joint object makes sure to tell the Comms object that it's time to send a message to the actual joint whenever new information about itself comes in. When the user enters new information about the arm into the GUI, the GUI's controller tells the joint object to change that information about itself. For example, if the user changes the setpoint of Joint 2 from 90 degrees to 112 degrees, the GUI will tell Joint 2 that its position has been updated to 112. Joint 2 will, upon seeing that its position has been updated, ask the Comms object to convey the new position information to the arm's base board.
 
