@@ -50,7 +50,7 @@ The process of prototyping our fourth joint started with creating an interface s
 The performance of a DC motor can be characterized by measuring several key values: the stall torque, the stall current, the free running RPM, and the free running current. It's important that all the values be measured when the motor is given the same input voltage.\\
 
 \noindent
-Specifications:\\ 
+Specifications:\\
 \noindent
 \indent Voltage: 8.4V \\
 \indent Stall torque: 32.3 kg cm stall \\
@@ -140,10 +140,11 @@ The mechanical side of the base module is relatively simple because the physical
 
 
 \subsection{Joint Control Board}
-The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design.
+The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design. %todo FINISH THISS
 
 \subsubsection{Overview of Design}
-%TODO: methodology->Joint control board->overview of design
+The joint board underwent significant revisions, outlined in Section \ref{sec:pjcbd}, but the depth of revision significantly dropped after the decision was made to use the TM4C123GH6PM 32-bit ARM processor. This processor had many peripherals internally that simplified the joint board design significantly. A block diagram of the final joint control board can be seen in Figure \ref{fig:jcb_block_diagram}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{jcb_block_diagram}
@@ -221,44 +222,79 @@ Preliminary joint control board design was done very early on in the project. Un
 	\label{fig:2nd_joint_board_block}
 \end{figure}
 
+\subsubsection{ADC Selection}
+The first design of the joint control board used a potentiometer to detect the joint angle and a current sense amplifier to detect the motor current. Both of these signals require an ADC to process, and the original microcontroller did not have a high resolution ADC on board, so an off board ADC was needed. Table \ref{tbl:ADC Selection} highlights the different ADCs that were evaluated before selecting one. The MCP3202, while not necessarily the best option from the chart, was selected since it has a very easy to use interface and was available in DIP package for easy testing. With the switch from the MSP430G2553 to the TM4C123GH6PM, the external ADC was no longer needed.
+
+\begin{table}[H]
+	\centering
+	\caption{ADC Selection}
+	
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		& Supply & Sampling & SCLK & \\
+		Part name & Voltage (V) & rate (MHz) & Freq (MHz) & Price (\$) \\
+		\hline
+		ADS7042 & 3.3 & 1 & 16 & 2.65 \\
+		
+		ADS7043 & 3.3 & 1 & 16 & 2.65 \\
+		
+		ADS7044 & 3.3 & 1 & 16 & 2.65 \\
+		
+		ADC121S021 & 3.3, 5 & 0.2 & 4 & 2.85 \\
+		
+		ADC121S051 & 3.3, 5 & 0.5 & 4 & 3.31 \\
+		
+		ADC121S101 & 3.3, 5 & 1 & 4 & 3.39 \\
+		
+		ADC7476 & 3.3, 5 & 1 & 20 & 3.41 \\
+		
+		MCP3202 & 3.3, 5 & 0.1 & 1.6 & 2.31 \\
+		
+		MAX11665 & 3.3 & 0.5 & 8 & 2.73 \\
+		\hline
+	\end{tabular}
+	
+	\label{tbl:ADC Selection}
+\end{table}
+
 \subsubsection{Preliminary Price Breakdown}
 Initially, one of the goals of this project was to produce a very low cost joint board. An estimate that matches the joint board block diagram from Figure \ref{fig:nice_prelim_joint_board_block} can be seen in Table \ref{tbl:Summary of Parts Selection}.
 \begin{table}[H]
-	\centering
-	\caption{Summary of Parts Selection}
+\centering
+\caption{Summary of Parts Selection}
+
+\begin{tabular}{|c|c|c|c|}
 	
-	\begin{tabular}{|c|c|c|c|}
-		
-		\hline
-		Function & Part name & Price (qty: 1) & Price (qty: 1k) \\
-		\hline
-		
-		CAN Controller & MCP2515 & \$1.87 & \$1.42 \\
-		
-		CAN Transceiver & MCP2561 & \$0.90 & \$0.68 \\
-		
-		ADC & MCP3202 & \$2.61 & \$1.98 \\
-		
-		MCU & MSP430G2553 & \$2.41 & \$1.18 \\
-		
-		Motor Controller & DRV8872 & \$2.17 & \$1.06 \\
-		
-		3.3V Voltage Regulator & LP2950-33 & \$0.47 & \$0.13 \\
-		
-		Current Sensor & ACS723LLC10AB & \$5.53 & \$2.36 \\
-		
-		Encoder & AS5055a & \$8.07 & \$5.48 \\
-		\hline
-		\hline
-		Price (qty: 1) & \$24.03 & & \\
-		
-		Price (qty: 1k) & \$14.30 & & \\
-		\hline
-		
-	\end{tabular}
+	\hline
+	Function & Part name & Price (qty: 1) & Price (qty: 1k) \\
+	\hline
 	
-	\label{tbl:Summary of Parts Selection}
-\end{table}
+	CAN Controller & MCP2515 & \$1.87 & \$1.42 \\
+	
+	CAN Transceiver & MCP2561 & \$0.90 & \$0.68 \\
+	
+	ADC & MCP3202 & \$2.61 & \$1.98 \\
+	
+	MCU & MSP430G2553 & \$2.41 & \$1.18 \\
+	
+	Motor Controller & DRV8872 & \$2.17 & \$1.06 \\
+	
+	3.3V Voltage Regulator & LP2950-33 & \$0.47 & \$0.13 \\
+	
+	Current Sensor & ACS723LLC10AB & \$5.53 & \$2.36 \\
+	
+	Encoder & AS5055a & \$8.07 & \$5.48 \\
+	\hline
+	\hline
+	Price (qty: 1) & \$24.03 & & \\
+	
+	Price (qty: 1k) & \$14.30 & & \\
+	\hline
+	
+\end{tabular}
+
+\label{tbl:Summary of Parts Selection}
+\end{table}	
 
 \subsubsection{Motor Driver}
 The DC motor driver selected was the DRV8872. This driver takes in two inputs, in1 and in2, which affect the output much like inputs to an H-bridge.The exception is when both inputs are high. In this case, the inputs are pulled together as a motor break. A truth table can be seen in Table \ref{tbl:drv8872-truth6}.
@@ -286,8 +322,8 @@ The DC motor driver selected was the DRV8872. This driver takes in two inputs, i
 	\caption{Motor Driver Comparison}
 \begin{tabular}{|c|c|c|c|}
 	\hline
-	
-Part name  & Peak Current (A) & Continuous current (A) & Control method \\
+	 & Peak & Continuous & \\
+	Part name  & Current (A) & current (A) & Control method \\
 	\hline
 	
 	LMD18245 & 6 & 3 & direction, brake \\
@@ -318,7 +354,9 @@ rpm = \frac{1 rev}{12 ticks} * \frac{1}{5} * \frac{60 seconds}{1 minute}
 
 
 \subsubsection{Demultiplexer}
-The original demultiplexer selected for the joint board (SN74LVC1G19) did not output the correct values to drive the motor driver (DRV8872). The demultiplexer output can be seen in Table  and the motor driver inputs can be seen in Table . When the EN pin was pulled high, both outputs would also be driven high. This effect is undesirable since, when given a PWM signal, this would cause the motor driver to turn then brake then turn again as opposed to the desired turn then coast then turn. To solve this problem, a different chip (SN74LVC1G18) was selected. The truth table for this chip can be seen in Table \ref{tbl:sn74lvc1g18-truth}.
+A demultiplexer was not necessary for the operation of the joint board. However, it simplifies the motor control signal from two PWM lines to one PWM line and a digital output, speed and direction. Since it was fairly simple to implement, the additional complexity in the circuit was added and the software was simplified by only needing to set up a single channel on the PWM controller.
+
+\noindent The original demultiplexer selected for the joint board (SN74LVC1G19) did not output the correct values to drive the motor driver (DRV8872). The demultiplexer output can be seen in Table  and the motor driver inputs can be seen in Table . When the EN pin was pulled high, both outputs would also be driven high. This effect is undesirable since, when given a PWM signal, this would cause the motor driver to turn then brake then turn again as opposed to the desired turn then coast then turn. To solve this problem, a different chip (SN74LVC1G18) was selected. The truth table for this chip can be seen in Table \ref{tbl:sn74lvc1g18-truth}.
 \begin{table}[H]
 	\centering
 	\caption{SN74LVC1G18 truth table}
@@ -356,15 +394,20 @@ G = 5 + 5(\frac{R_1}{R_2})
 
 \noindent The INA332 needs a voltage reference to use as the 0V differential output. Initially, two 1k$\Omega$ resistors were used to apply this voltage. This caused the output to change nonlinearly with the input voltage. The resistors were replaced with a LM358 dual operational amplifier, configured as a voltage buffer with the input connected to a potentiometer. The INA332 inputs were connected to ground and the LM358 buffer potentiometer was adjusted to set the 0V output to  $\frac{1}{2} V_{cc}$. This voltage was 1.846V. Instead of a potentiometer, two resistors were used to create this 1.846V offset.
 
+\subsubsection{Hall Effect Encoder}
+An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every 0.6ms in order for the device to not go into low power mode. With this in mind, a sampling speed of 1kHz was selected.
+
+\noindent In addition to the Arduino testing, tests were run with the TM4C123GH6PM and a test rig. %todo Add pictures of encoder test rig
+
 \subsubsection{TM4C123GXL Launchpad}
-Selecting a microcontroller was a key part of making the joint control board. Without a decently capable MCU, the joint board would not be able to function as we want it to, but buying the best microcontroller on the market can be costly. The EK-TM4C123GXL is an ARM Coretex M4f-based microcontroller evaluation kit from TI that has many peripherals to allow us to control the joint board without buying many external peripherals. The perihperals on this chip that we will need include a CAN controller, 12-bit ADC, USB controller, SSI controller, PWM controller, and many GPIO. These perihperals were implemented separately with a test circuit configured to verify that each peripheral was functioning correctly.
+Selecting a microcontroller was a key part of making the joint control board. Without a capable MCU, the joint board would not be able to function as we want it to, but buying the best microcontroller on the market can be costly. The EK-TM4C123GXL is an ARM Coretex M4f-based microcontroller evaluation kit from TI that has many peripherals to allow us to control the joint board without buying many external peripherals. The perihperals on this chip that we will need include a CAN controller, 12-bit ADC, USB controller, SSI controller, PWM controller, and many GPIO. These perihperals were implemented separately with a test circuit configured to verify that each peripheral was functioning correctly.
 
 \noindent Several peripherals were needed to achieve the desired functionality from our microcontroller. A test board was set up in order to test and verify that each of these peripherals was setup properly and working as expected. The test board consisted of a potentiometer connected to an ADC pin, an SPI controlled ADC (MCP3202), the 1:2 demultiplexer (SN74LVC1G18), CAN transceiver (TC332), and some LEDs.
 
 \noindent As a temporary stand in for the AS5055 absolute Hall effect encoder to test the SSI peripheral, a MCP3202 12-bit, 2 channel ADC was used. Both devices use SPI to communicate their sensor data back to the MCU, and the packets are similar in structure. Some differences between the two that can be changed are a maximum sample rate for the AS5055 of ~1ms as opposed to the few SCLK cycle delays for the MCP3202. The AS5055 has a maximum SCLK frequency of up to 10MHz at 3.3V while the MCP3202 has a limit of 900kHz at 3.3V. 
 
-
 \noindent The potentiometer was connected to PE0 which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s.
+
 
 \begin{table}[H]
 	\centering
@@ -405,6 +448,8 @@ MAX11665 & 3.3 & 0.5 & 8 & 2.73 \\
 An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
 %TODO: Finish paragraph
 
+
+%TODO: Make images smaller
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{encoderTestRig1}
@@ -428,13 +473,14 @@ An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder 
 \end{figure}
 
 \subsection{CAN Bus}
+The CAN bus is the spine of the control system, carrying messages from the base to each joint and back from each of the joints to the base. Unit tests and careful integration were done to 
+
 \subsubsection{Determining Joint Placement with Message ID}
 CAN bus will be used to communicate between the base and joints. A limitation of CAN is that there is no way of determining the position of a module on the bus. This is important for controlling a robot arm since joint 1 is controlled differently from joint 2, etc. In order to determine the position of a joint board on the bus, another method is needed. The CAN message ID contains 11 bits in the standard frame.
 
 \noindent We decided to use the upper 6 bits as a joint board number identifier, a number unique to that specific joint board, and the lower 5 bits as a message type. By doing this, we can tell the base the joint identifier number and position on the arm to rout position update messages to the correct joint on the arm.
 
 \noindent There were a few ways of accomplishing this. One would be to program each joint board with a different identifier number. This could get very tedious and confusing for having many joint boards, since we would have to change and track identifier numbers for each unique joint board. Another option was to use EEPROM to automatically store the identifier number and upload it via the USB cable used for programming the board. This could get complicated since we would have to write code to not only read in the identifier properly, but also store it in EEPROM properly. Instead, we decided to use DIP switches. DIP switches allow us to input the identifier number in binary and update them on the fly without reprogramming the board.
-%TODO: insert image of DIP switches (or schematic)
 
 \begin{figure}[H]
 \centering
@@ -444,21 +490,54 @@ CAN bus will be used to communicate between the base and joints. A limitation of
 \end{figure}
 
 \noindent On startup, the joint board reads in the identifier bits and stores them in a variable. The identifier is then used as a mask for the CAN message receive IDs. The CAN controller compares incoming message IDs to the ID mask and ID value set when initializing the message receive object. When setting the message receive object, we can set the message ID to the joint board identifier, shifted up by 5 bits, and set the mask to only listen for messages that match the upper 6 bits. We can set the message receive object to receive messages with the joint board ID in the upper 6 bits, regardless of message type. Since there are 32 message objects available on the CAN controller of the TM4C123GH6PM microcontroller, we have a great amount of flexibility for listening to different types of messages.
-%TODO: insert figure explaining message ID breakdown
+
+\begin{table}
+	\centering
+	\caption{CAN message ID breakdown}
+	\begin{tabular}{| c | c |}
+		\hline
+		CAN ID & Message type \\
+		\hline
+		\textsc{000000XXXXX} & Reserved \\
+		\textsc{XXXXXX00000} & Init Encoder \\
+		\textsc{XXXXXX00001} & Init PID P constant \\
+		\textsc{XXXXXX00010} & Init PID I constant \\
+		\textsc{XXXXXX00011} & Init PID D constant \\
+		\textsc{XXXXXX00100} & Position update to joint \\
+		\textsc{XXXXXX10000} & Position update to base\\
+		\hline
+	\end{tabular}
+\end{table}
 
 \subsubsection{Implementing a Simple CAN Bus}
-The preliminary CAN setup consisted of two TM4C Launchpads, one with transmit code and one with receive code. The transmitting board was set up for 1Mbps transmission with message ID = 2, and message length = 1 byte. The message data was a 4-bit value that incremented every time the message was successfully transmitted. A software delay was used to slow the transmission rate down to about every ~1.2 seconds. The receive board was set up for 1Mbps transmission with message ID = 0, message ID mask = 0, and message length = 1 byte. Setting both the message ID and mask to 0 signals the controller to accept any message. 4 LEDs were set up to see the CAN message data visually.
+The preliminary CAN setup consisted of two TM4C Launchpads, one with transmit code and one with receive code. The transmitting board was set up for 1Mbps transmission with message ID = 2, and message length = 1 byte. The message data was a 4-bit value that incremented every time the message was successfully transmitted. A software delay was used to slow the transmission rate down to about every ~second. The receive board was set up for 1Mbps transmission with message ID = 0, message ID mask = 0, and message length = 1 byte. Setting both the message ID and mask to 0 signals the controller to accept any message. 4 LEDs were set up to see the CAN message data visually.
 %TODO: insert table of configuration data
 
-\noindent We had several problems getting this simple example to work. Initially, one of the jumper wires used for the CAN bus was broken, causing the CAN Hi lines on the transceivers to not be connected. The next problem was that the sample code provided by TI was not correct. When the CAN controller receives a valid message, it signals the processor with an interrupt. When a receive interrupt is processed by the example code, the interrupt flag is cleared and then the message data is read in. The problem is that when the interrupt flag is cleared, the new data bit that signals that there is valid data available is cleared. To fix this, the operations must be switched so that message data is read in before the interrupt flag is cleared. Once this fix was applied, CAN communications were functional.
-%TODO: insert image of CAN bus test setup
+\noindent We had several problems getting this simple example to work. Initially, one of the jumper wires used for the CAN bus was broken, causing the CAN Hi lines on the transceivers to not be connected. The next problem was that the sample code provided by TI was not correct. When the CAN controller receives a valid message, it signals the processor with an interrupt. When a receive interrupt is processed by the example code, the interrupt flag is cleared and then the message data is read in. The problem is that when the interrupt flag is cleared, the new data bit that signals that there is valid data available is cleared. To fix this, the operations must be switched so that message data is read in before the interrupt flag is cleared. Once this fix was applied, CAN communications were functional. 
+
+\noindent During the debugging process, a logic analyzer (Saleae 8-channel logic analyzer) was used to verify correct transmission of CAN packets. The logic analyzer software can be seen in Figure \ref{fig:can_logic_analyzer} decoding a packet with ID 2, data length 1, data byte equaling 7, and a proper ACK signal. The x marks a bit that was inserted to keep the timing consistent among the transceivers. Additionally, Figure \ref{fig:can_TXD_RXD} shows the ACK bit on the RXD line (channel 2) and no ACK bit on the TXD line (channel 0).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{CAN_Logic_Analyzer}
+	\caption{CAN bus as viewed in the logic analyzer software}
+	\label{fig:can_logic_analyzer}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{CAN_TXD_to_RXD}
+	\caption{CAN TXD (channel 0) and RXD (channel 2) in the logic analyzer software}
+	\label{fig:can_TXD_RXD}
+\end{figure}
 
 \subsubsection{CAN Termination}
 CAN specification states that the CAN bus needs to be terminated on both ends by 120$\Omega$ resistors. The purpose of these resistors is to help mitigate signal reflections as well as pull the CAN Hi and CAN Lo lines together when the bus state is recessive. Since the resistors need to be at either end of the CAN bus, using normal resistors requires a static bus configuration. Out system will not necessarily have a fixed configuration, though, so a different solution was needed.
 
 \noindent One method was to require the end user to attach a unique component, such as an end effector, at either end of the bus. This would effectively mean that an arm would always need a base module and an end effector to function properly. This rigid definition was not something we wanted to enforce on the end user, so instead we came up with a auto-disconnect circuit to disconnect the terminating resistor if another joint is added to the arm.
 
-\noindent The way this works is through a MOSFET switch, seen in Figure \ref{fig:can_terminate_circ}. The MOSFET drain and source connect the CAN Hi and CAN Lo lines through a 120$\Omega$ resistor and the gate is pulled up to $V_{DD}$ through a 1l$\Omega$ resistor. When the next joint is connected, the gate is connected to ground and the MOSFET is opened, disconnecting the CAN Hi and CAN Lo lines. When there is no joint connected, the MOSFET is closed, effectively acting as a 5$\Omega$ resistor in series with the 120$\Omega$ resistor. This new 125$\Omega$ resistance is within tolerance in the CAN specifications which state that the resistance must be between 50$\Omega$ and 70$\Omega$.
+\noindent The way this works is through a MOSFET switch, seen in Figure \ref{fig:can_terminate_circ}. The MOSFET (part number BS170) drain and source connect the CAN Hi and CAN Lo lines through a 120$\Omega$ resistor and the gate is pulled up to $V_{DD}$ through a 1l$\Omega$ resistor. When the next joint is connected, the gate is connected to ground and the MOSFET is opened, disconnecting the CAN Hi and CAN Lo lines. When there is no joint connected, the MOSFET is closed, effectively acting as a 5$\Omega$ resistor in series with the 120$\Omega$ resistor. This new 125$\Omega$ resistance is within tolerance in the CAN specifications which state that the resistance must be between 50$\Omega$ and 70$\Omega$.
+%todo: cite BS170 datasheet
 
 \begin{figure}[H]
 	\centering
@@ -467,130 +546,36 @@ CAN specification states that the CAN bus needs to be terminated on both ends by
 	\label{fig:can_terminate_circ}
 \end{figure}
 
+\subsection{Printed Circuit Boards}
+A PCB was made for each of the major subsystems as a more final test. The subsystems for which a PCB was designed include the motor driver (both with and without a current sensor), load cell amplifier, CAN transceiver, and TM4C123GH6PM microcontroller. After these were verified to be working, a Boosterpack compatible design of the whole joint control board.
+
+\noindent The motor driver PCB can be seen in Appendix \ref{app:motor_driver} and has the demultiplexer and a shunt resistor for triggering the automatic internal shutoff if the current gets too high. The motor driver with current sensor has a current sensor integrated in the board and can be seen in Appendix \ref{app:motor_driver_current}. The load cell amplifier has the LM358 op amp as well as the INA332 instrumentation amplifier and can be seen in Appendix \ref{app:load_cell_amp}. The CAN transceiver PCB was designed that contains the 6 necessary DIP switches, CAN transceiver, and auto-terminate circuit and can be seen in Appendix \ref{app:can_transceiver}. The joint control board Boosterpack has all of these components in a single PCB that mounts on top of the TM4C123GXL Launchpad and can be seen in Appendix \ref{app:joint_board_boosterpack}. All of these PCBs can be seen in Figure \ref{fig:pcbs}. A closeup of the joint control board Boosterpack attached to a Launchpad can be seen in Figure \ref{fig:jcb_boosterpack}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.1]{pcbs}
+	\caption{Assembled PCBs of each major subsystem including motor driver with current sensor (right), CAN transceiver (bottom), load cell amplifier (left), and joint control board Boosterpack (top)}
+	\label{fig:pcbs}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.1]{jcb_boosterpack}
+\caption{Joint control board Boosterpack on the TM4C123GXL Launchpad}
+\label{fig:jcb_boosterpack}
+\end{figure}
+
+\noindent Small problems existed in some of the PCBs during the first revision. The CAN transceiver PCB has the $V_{CC}$ and GND pins swapped. Once this problem was identified, the traces were cut, wire soldered, and the schematic altered for another revision. The load cell amplifier PCB has a GND pin that was not connected to anything. The GND pin on the INA332 amplifier had an unconnected ground pin. This pin was connected with wire, and the PCB worked as expected.
+
+\noindent The joint control board Boosterpack had the CAN transceiver $V_{CC}$ and GND pins swapped as well as needing the motor direction pin to be moved from one pin to another. This change came about due to the Launchpad construction. Two of the pins were connected internally but labeled differently, so the motor direction pin was swapped in code, the trace was cut, and wire was soldered to the new pin. These changes can be seen in Figure \ref{fig:jcb_boosterpack}. Another revision of the joint control board Boosterpack was made but not ordered due to time constraints.
+
 \subsection{Arm Structure}
 Arm structure is not something we wanted to fully define, since the end user is supposed to create their own arms, but there were some basic components that needed clarification. The first of these is that every arm must begin with a base module and have some combination of up to four additional joints connected.  This allows the end-user flexibility in how they want to construct the arm without allowing them to add too many joints.
 
-\subsection{Fourth Joint}
-%TODO: insert solidworks .dwg files and place them in the correct spot
-In order to show that our control system can be integrated with other arms, we designed a fourth joint to connect to an existing arm. By showing that we can add a newly designed joint to our existing arm, we are creating a proof-of-concept that shows the versatility of our control system.  The design of the fourth joint was done in Solidworks, a software that allows users to design objects in a 3-D space \cite{Solidworks}. Once we had designed the fourth link, we moved forward to the rapid-prototyping stage where we took our parts designed in Solidworks and converted them to 3-D printable models.  We then used the software Cura \cite{Cura} and the Lulzbot Taz 6 3-D printer \cite{Taz6} to fabricate a first iteration of our fourth joint.  From here we continued to refine our parts and re-print pieces with tighter tolerances until they came together to make a fourth joint that interfaces with our control system.
 
-\subsubsection{Fourth Joint Design}
-The process of prototyping our fourth joint started with creating an interface so that we can connect it to the already existing arm.  We decided for the sake of simplicity to attach our fourth joint where the current end-of-arm-tooling would normally connect. \\
+\subsection{Code Library}
+The code library is another important part of what we did to make our arm work. It controls all of the electrical components via the sending of packets out to the base module over a Serial UART line. It handle a lot of the more involved calculations for controlling the arm like the forward and inverse kinematics.  
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[angle=90, scale=0.1]{current_arm_connector}
-	\caption{Current Arm End Effector Mount}
-	\label{Current Arm Encoder Mount}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.1]{Joint_4_Side}
-\caption{Side View of Final Removable Joint}
-\label{fig:Side View of Joint 4}
-\end{figure}
-
-\noindent Our second decision was to create a joint that is actuated using a brushed DC motor to prove that we can control DC motors in addition to the servos that already exist on the arm.  Next, we decided that since most of the joints currently on the arm provide rotation perpendicular to the z-axis of the actuator, we wanted a joint that provides parallel rotation. To accomplish this we removed the control logic from a servo that already was used on the arm, converting it into a brushed DC motor. Next, we designed a direct-drive mount for the motor we fabricated so that the output shaft would rotate along the motor's axis of rotation.  We built a mounting for the motor and a structure to provide support for both radial and axial load on the shaft. This structure made use of multiple radial bearings, placed to keep the shaft in line and eliminate any friction between moving and static pieces of the joint.  We also included a thrust bearing on the main shaft in order to stop thrust loads from being placed directly on the servo.  Finally, we designed an idler-shaft that sits in two bearings so that it can free rotate with negligible friction. The purpose of this idler shaft is to rotate in a 1:1 gear ratio with the main shaft using a timing belt to connect the two shafts.  At the bottom of the idler shaft there is a magnet whose changing magnetic field is read by a Hall effect sensor mounted onto the bottom of the fourth joint so that it sits exactly 1mm from the magnet, allowing for optimal position reading.  \\
-
-\subsubsection{Fourth Joint Prototyping}
-The process of prototyping our fourth joint started with creating an interface so that we can connect it to the already existing arm.  We decided for the sake of simplicity to attach our fourth joint where the current end-of-arm-tooling would normally connect. %TODO: MOVE UP
-
-\noindent To create a prototype of our fourth joint, we determined the mechanical requirements of our arm and worked backwards to create a rapid prototyping model (RPM).  RPMs are usually CAD models which are able to be turned into a functional model using a 3-D printer. or other method.  Once the functional model was 3-D printed, we would assemble the parts and test how they all fit together.  With each new functional model we revised our RPM and printed a new functional model in order to meet the requirements for our fourth joint. This process of building, revising based on testing a physical prototype was only made possible due to the advances in recent years in 3-D printing technology making it feasible to create these prototypes so quickly while still having them be robust. 
-
-\subsubsection{3-D Printing}
-3-D printing is convenient because it allows the user to manufacture parts in a novel way. Overall, we chose to 3-D print our fourth joint because it was what we were most familiar with and we had easy access to multiple 3-D printers.  While the process of 3-D printing a part might not be as accurate as other more conventional methods of machining parts, it is a much easier method to learn and has a much quicker turnaround time. For our choice of 3-D printer, we used the LulzBot Taz 6 \cite{Taz6} with a single extruder head (Version 2.1) and 2.65mm filament. This printer is readily available to us through the school and the resolution of the printer was fine enough that it was easily able to achieve the tight tolerances that we needed to print parts such as the timing belt teeth.    
-
-%TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
-
-\subsubsection{Motor Selection}
-%TODO: More words here 
-Specs:\\ 
-\noindent
-\indent 8.4V\\ 
-\indent 32.3 kg cm stall\\
-\indent 5.25 A stall\\
-\indent .1 seconds/60 degrees free running (100 rpm)\\
-\indent .23 A free running\\
-
-\begin{table} [H]
-	\centering
-	\caption{HV5923MG Motor Data}
-	\label{tab:MotorData}
-	\begin{tabular}{|p{1cm}|p{1.5cm}|p{1.5cm}|p{1.2cm}|p{1cm}|p{1.5cm}|p{1cm}|p{1cm}|p{2cm}|}
-\hline
-Speed (RPM) & Torque (N-m) & Torque (in-lbf) & Current (A) & Pout (W) & Efficiency (\%) & Pin (W) & Heat (W) & back-EMF (V) \\
-\hline
-
-0 & 3.16 & 27.98 & 5.25 & 0 & 0 & 44.1 & 44.1 & 0 \\
-
-7 & 2.94 & 26.02 & 4.9 & 2.15 & 5.24 & 41.15 & 38.99 & 0.56 \\
-
-13 & 2.75 & 24.34 & 4.6 & 3.74 & 9.69 & 38.62 & 34.87 & 1.04 \\
-
-20 & 2.53 & 22.38 & 4.25 & 5.3 & 14.85 & 35.67 & 30.37 & 1.61 \\
-
-27 & 2.31 & 20.42 & 3.89 & 6.52 & 19.94 & 32.71 & 26.19 & 2.17 \\
-
-33 & 2.12 & 18.74 & 3.59 & 7.32 & 24.24 & 30.18 & 22.87 & 2.65 \\
-
-40 & 1.9 & 16.79 & 3.24 & 7.94 & 29.17 & 27.23 & 19.29 & 3.21 \\
-
-47 & 1.68 & 14.83 & 2.89 & 8.24 & 33.96 & 24.28 & 16.04 & 3.78 \\
-
-53 & 1.49 & 13.15 & 2.59 & 8.24 & 37.9 & 21.75 & 13.51 & 4.26 \\
-
-60 & 1.26 & 11.19 & 2.24 & 7.94 & 42.25 & 18.8 & 10.86 & 4.82 \\
-
-67 & 1.04 & 9.23 & 1.89 & 7.32 & 46.18 & 15.85 & 8.53 & 5.38 \\
-
-73 & 0.85 & 7.55 & 1.59 & 6.52 & 48.99 & 13.32 & 6.79 & 5.86 \\
-
-80 & 0.63 & 5.6 & 1.23 & 5.3 & 51.09 & 10.37 & 5.07 & 6.43 \\
-
-87 & 0.41 & 3.64 & 0.88 & 3.74 & 50.49 & 7.41 & 3.67 & 6.99 \\
-
-93 & 0.22 & 1.96 & 0.58 & 2.15 & 44.12 & 4.88 & 2.73 & 7.47 \\
-
-100 & 0 & 0 & 0.23 & 0 & 0 & 1.93 & 1.93 & 8.03 \\
-\hline
-
-\end{tabular}
-
-\end{table}
-
-\begin{figure}[H]
-\centering
-\includegraphics{motor}
-\caption{HV5923MG Servo Motor}
-\label{fig:HV5923MG Servo Motor}
-\end{figure}
-
-
-\subsubsection{Arm Base}
-% Talk about requirements for base
-% take in new joint data at certain speeds
-% output new joint data at certain speeds
-The mechanical side of the base module is relatively simple because the physical structure comes from the pre-existing arm. In order to make this compatible with our controls system, all we have to do is mount our joint and encoder boards to it. This is fairly simple since we use a slightly modified version of the encoder board on the existing arm with the same mounting scheme. Our joint board mounting scheme focused around mounting each board in a place where it would not be impeded by the movement of the arm during runtime. 
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{mount_back_view}
-	\caption{TM4C123G to arm mount}
-	\label{fig:mount_back_view}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{mount_and_holes}
-	\caption{Mounting holes on arm and mounted TM4C123G}
-	\label{fig:mount_and_holes}
-\end{figure}
-
-We have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the same position for each category of joint type to keeps these needs consistent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solution.
--
--\subsection{Code Library}
--The code library is another important part of what we did to make our arm work. It controls all of the electrical components via the sending of packets out to the base module over a Serial UART line. It handle a lot of the more involved calculations for controlling the arm like the forward and inverse kinematics.  
 
 \subsubsection{Maven}
 Maven is a utility for Java-based projects that seeks to provide a uniform build system for the project. It accomplishes this by defining a project object model and a set of plugins that each Maven project shares. Therefore, Maven can provide a streamlined build environment for every instance of the project, allowing users to have the same build process across multiple different devices and environments. Maven could be compared to a flexible template for how a project should be arranged and what files should be included. We chose Maven for our Java project because it makes it much easier for our team to collaborate on the front-end side of the code.  It also allows us to package into our program libraries that we used in our project so that there are fewer dependencies that the end-user must download in order to use our software \cite{maven}.
@@ -607,7 +592,7 @@ Maven is a utility for Java-based projects that seeks to provide a uniform build
 \end{figure}
 
 %TODO do something more with this sentence
-\noindent The front-end program running on the PC is written in Java. We used JavaFX to make the GUI. We chose to write this part of the program in Java because of the speed and reliability of a language that has many libraries and excellent Interactive Development Environments. 
+\noindent The front-end program running on the PC is written in Java. We used JavaFX to make the GUI. We chose to write this part of the program in Java because of the speed and reliability of a language that has many libraries and excellent Interactive Development Environments.  
 
 \noindent The main class starts the JavaFX Project. The JavaFX Project holds an list of joints which lists all the joints, which contains data about how the arm is configured. Each Joint object makes sure to tell the Comms object that it's time to send a message to the actual joint whenever new information about itself comes in. When the user enters new information about the arm into the GUI, the GUI's controller tells the joint object to change that information about itself. For example, if the user changes the setpoint of Joint 2 from 90 degrees to 112 degrees, the GUI will tell Joint 2 that its position has been updated to 112. Joint 2 will, upon seeing that its position has been updated, ask the Comms object to convey the new position information to the arm's base board.
 
@@ -634,7 +619,7 @@ Multithreading is the process of creating new threads in order to let code run i
 
 \subsubsection{Saving of Configuration}
 %TODO: Talk about Gson
-In order to store the information that we need to be persistent between different instances of the application, we used a library called Gson made by Google \cite{gson}. This library's primary use is to take data and store it in a .json file, a kind of simplistic database.  We used this library to save the joint object which were the data containers about the configuration of the arm. All of the saving and loading is done via the GUI so that the user can either load information about an arm themselves, or they can change the values using the GUI text fields and save a new configuration when it needs updating. Doing so allows the user to always be able to either modify and update the constants inside the data container that is the Joint object and have those objects be saved and loaded during each runtime of the application. Pictured below is the GUI tab which stores all of the constants for the arm such as encoder home values and PID constants, as well as has buttons to interface with the saving, loading and startup of our program. 
+In order to store the information that we need to be persistent between different instances of the application, we used a library called Gson made by Google \cite{gson}. This library's primary use is to take data and store it in a .json file, a kind of simplistic database.  We used this library to save the joint object which were the data containers about the configuration of the arm. All of the saving and loading is done via the GUI so that the user can either load information about an arm themselves, or they can change the values using the GUI text fields and save a new configuration when it needs updating. Doing so allows the user to always be able to either modify and update the constants inside the data container that is the Joint object and have those objects be saved and loaded during each runtime of the application. Pictured below is the GUI tab which stores all of the constants for the arm such as encoder home values and PID constants, as well as has buttons to interface with the saving, loading and startup of our program.
 
 \begin{figure}[H]
 	\centering
