@@ -444,6 +444,8 @@ An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder 
 
 \noindent In addition to the Arduino testing, tests were run with the TM4C123GH6PM and a test rig. The encoder test rig underwent significant revision to improve its reliability and accuracy in position the magnet above the hall effect sensor. The first iteration can be seen in Figure \ref{fig:First Iteration of Encoder Test Rig} and the second iteration can be seen in Figures \ref{fig:Second Iteration of Encoder Test Rig, Magnet View} and \ref{fig:Second Iteration of Encoder Test Rig, Side View}.
 
+\noindent One major problem encountered with the hall effect encoder was very noisy signals. Every so often, the encoder would read a value that was around 100 counts off of all the other values read in. This is most likely either an issue with magnet alignment or a noisy SPI line. In either case, this was largely solved in code with an 8-item circular buffer and exponential filter with alpha of 0.85. Using these two in conjunction with one another, these sporadic errors were largely evened out.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.35]{encoderTestRig1}
