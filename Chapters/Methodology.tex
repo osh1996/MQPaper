@@ -131,10 +131,10 @@ The mechanical side of the base module is relatively simple because the physical
 \noindent sBecause we have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the same position for each category of joint type to keeps these needs consistent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solution.
 
 \subsection{Joint Control Board}
-The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design.
+The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design. %todo FINISH THISS
 
 \subsubsection{Overview of Design}
-%todo: methodology->Joint control board->overview of design
+The joint board underwent significant revisions, outlined in Section \ref{sec:pjcbd}, but the depth of revision significantly dropped after the decision was made to use the TM4C123GH6PM 32-bit ARM processor. This processor had many peripherals internally that simplified the joint board design significantly. A block diagram of the final joint control board can be seen in Figure \ref{fig:jcb_block_diagram}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{jcb_block_diagram}
@@ -385,8 +385,9 @@ G = 5 + 5(\frac{R_1}{R_2})
 \noindent The INA332 needs a voltage reference to use as the 0V differential output. Initially, two 1k$\Omega$ resistors were used to apply this voltage. This caused the output to change nonlinearly with the input voltage. The resistors were replaced with a LM358 dual operational amplifier, configured as a voltage buffer with the input connected to a potentiometer. The INA332 inputs were connected to ground and the LM358 buffer potentiometer was adjusted to set the 0V output to  $\frac{1}{2} V_{cc}$. This voltage was 1.846V. Instead of a potentiometer, two resistors were used to create this 1.846V offset.
 
 \subsubsection{Hall Effect Encoder}
-An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
-%TODO: Finish paragraph
+An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every 0.6ms in order for the device to not go into low power mode. With this in mind, a sampling speed of 1kHz was selected.
+
+\noindent In addition to the Arduino testing, tests were run with the TM4C123GH6PM and a test rig. %todo Add pictures of encoder test rig
 
 \subsubsection{TM4C123GXL Launchpad}
 Selecting a microcontroller was a key part of making the joint control board. Without a capable MCU, the joint board would not be able to function as we want it to, but buying the best microcontroller on the market can be costly. The EK-TM4C123GXL is an ARM Coretex M4f-based microcontroller evaluation kit from TI that has many peripherals to allow us to control the joint board without buying many external peripherals. The perihperals on this chip that we will need include a CAN controller, 12-bit ADC, USB controller, SSI controller, PWM controller, and many GPIO. These perihperals were implemented separately with a test circuit configured to verify that each peripheral was functioning correctly.
@@ -417,6 +418,23 @@ CAN bus will be used to communicate between the base and joints. A limitation of
 
 \noindent On startup, the joint board reads in the identifier bits and stores them in a variable. The identifier is then used as a mask for the CAN message receive IDs. The CAN controller compares incoming message IDs to the ID mask and ID value set when initializing the message receive object. When setting the message receive object, we can set the message ID to the joint board identifier, shifted up by 5 bits, and set the mask to only listen for messages that match the upper 6 bits. We can set the message receive object to receive messages with the joint board ID in the upper 6 bits, regardless of message type. Since there are 32 message objects available on the CAN controller of the TM4C123GH6PM microcontroller, we have a great amount of flexibility for listening to different types of messages.
 %TODO: insert figure explaining message ID breakdown
+\begin{table}
+	\centering
+	\caption{CAN message ID breakdown}
+	\begin{tabular}{| c | c |}
+		\hline
+		CAN ID & Message type \\
+		\hline
+		\textsc{000000XXXXX} & Reserved \\
+		\textsc{XXXXXX00000} & Init Encoder \\
+		\textsc{XXXXXX00001} & Init PID P constant \\
+		\textsc{XXXXXX00010} & Init PID I constant \\
+		\textsc{XXXXXX00011} & Init PID D constant \\
+		\textsc{XXXXXX00100} & Position update to joint \\
+		\textsc{XXXXXX10000} & Position update to base\\
+		\hline
+	\end{tabular}
+\end{table}
 
 \subsubsection{Implementing a Simple CAN Bus}
 The preliminary CAN setup consisted of two TM4C Launchpads, one with transmit code and one with receive code. The transmitting board was set up for 1Mbps transmission with message ID = 2, and message length = 1 byte. The message data was a 4-bit value that incremented every time the message was successfully transmitted. A software delay was used to slow the transmission rate down to about every ~second. The receive board was set up for 1Mbps transmission with message ID = 0, message ID mask = 0, and message length = 1 byte. Setting both the message ID and mask to 0 signals the controller to accept any message. 4 LEDs were set up to see the CAN message data visually.
