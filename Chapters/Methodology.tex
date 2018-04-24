@@ -1,32 +1,22 @@
 \section{Methodology}
 %todo: add introduction to methodology
-\subsection{Preliminary Joint Control Board Designs}
-Preliminary joint control board design was done very early on in the project. Unfortunately, the majority of this work was done before much of the necessary research for part selection, leading to many revisions and re-designs, though the main concepts stayed in place. This section outlines the preliminary designs and revisions of those up until the selection of the TM4C123GH6PM microcontroller, at which point the design solidified and forward progress began.
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.25]{first_joint_board_block_diagram}
-	\caption{First draft of the complete joint board block diagram}
-	\label{fig:1st_joint_board_block}
-\end{figure}
-The first complete block diagram of the joint control board Figure \ref{fig:1st_joint_board_block}. This diagram was centered around a MSP430G series microcontroller, and focused on keeping the cost of the board down. 
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.25]{second_joint_board_block_diagram}
-	\caption{Mostly complete preliminary joint board block diagram}
-	\label{fig:2nd_joint_board_block}
-\end{figure}
+\subsection{System Design}
+%todo: methodology->system design
 
+\subsection{Joint Control Board}
+The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design.
+
+\subsubsection{Overview of Design}
+%todo: methodology->
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.4]{link_block_diagram}
-	\caption{Iteration of preliminary joint board block diagram}
-	\label{fig:nice_prelim_joint_board_block}
+	\includegraphics[scale=0.4]{jcb_block_diagram}
+	\caption{Block diagram of the joint control board}
+	\label{fig:jcb_block_diagram}
 \end{figure}
-
-\subsection{Joint Control Board Part selection}
-Selecting the types of sensors to use for the control board was a very important step of the control board design. There are many different types of sensors to accomplish each major goal that the control board must accomplish.
 
 \subsubsection{Joint Angle Sensor}
+\label{sec:jas}
 Potentiometers seem like a good choice due to their simplicity and high accuracy capabilities. However, they do not lend themselves well to this application because of how quickly they wear out. Over time, as the joints move to different positions, the potentiometers will wear out quickly and cause inaccurate readings. Additionally, long lifespan and high resolution potentiometers can be very expensive. Furthermore, potentiometers are large and can be difficult to mount. Finally, the hard stop on the potentiometer means the joint angles will be limited to a certain range (typically about 270 \textdegree for single turn potentiometers).
 
 \noindent The next obvious solution is to use optical encoders because they will not wear out and offer very high resolution capabilities. These sensors are not well suited for this application, however, since they are typically expensive, especially for high resolution encoders - and ones that are capable of reading absolute position. Additionally these sensors are somewhat bulky and would take up too much space in the closed environment of a joint. 
@@ -65,7 +55,36 @@ SPI and I$^2$C are mostly used for on-board, controller-to-peripheral communicat
 
 \noindent RS485 and CAN are similar in many ways, but with a few key differences that separate them. RS485 is very fast to transmit and simple to implement, but takes a lot of the controller's time to send packets. CAN has the advantage because the controller and transceiver control the transmission independent of the controller so the controller has more free time to process data. Another advantage CAN has over RS485 is the amount of error checking that goes on to ensure proper message transmission. For these reasons, we decided to use CAN to communicate between the base and control boards.
 
-\subsection{Joint Control Board}
+\subsubsection{Preliminary Joint Control Board Designs}
+\label{sec:pjcbd}
+Preliminary joint control board design was done very early on in the project. Unfortunately, the majority of this work was done before much of the necessary research for part selection, leading to many revisions and re-designs, though the main concepts stayed in place. This section outlines the preliminary designs and revisions of those up until the selection of the TM4C123GH6PM microcontroller, at which point the design solidified and forward progress began. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.18]{first_joint_board_block_diagram}
+	\caption{First draft of the complete joint board block diagram}
+	\label{fig:1st_joint_board_block}
+\end{figure}
+
+\noindent The first complete block diagram of the joint control board Figure \ref{fig:1st_joint_board_block}. This diagram was centered around a MSP430G series microcontroller, and focused on keeping the cost of the board down. Some component selection was solidified , including the following: MSP430G2553 (microcontroller), MCP3202 (ADC), DRV8872 (motor driver), LS7366R (quadrature counter), MCP2515 (CAN controller), and MCP2561 (CAN transceiver). 
+
+\noindent The decision to replace the potentiometer with an absolute hall effect encoder was made to lengthen the lifespan of the device. Greater detail about this decision is presented in Section \ref{sec:jas}. This change resulted in the diagram shown in Figure \ref{fig:nice_prelim_joint_board_block}. Certain components, such as the CAN controller and transceiver, operated at 5V while others, such as the microcontroller and absolute hall effect encoder, required 3.3V. Most other components could function at either voltage, and were placed on either side of the level shifter for other reasons. The ADC, for example had a supply-voltage-dependent maximum SCLK frequency.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{link_block_diagram}
+	\caption{Iteration of preliminary joint board block diagram}
+	\label{fig:nice_prelim_joint_board_block}
+\end{figure}
+
+\noindent Some planning was done to coordinate communication between the components, including placement of a 3.3V to 5V level shifter. This planning led to the block diagram shown in Figure \ref{fig:2nd_joint_board_block}. This diagram requires many lines to pass through the level shifter, which is not ideal and led to the decision to revise component selection.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.2]{second_joint_board_block_diagram}
+	\caption{Mostly complete preliminary joint board block diagram}
+	\label{fig:2nd_joint_board_block}
+\end{figure}
+
 \subsubsection{Motor Driver}
 The DC motor driver selected was the DRV8872. This driver takes in two inputs, in1 and in2, which affect the output much like inputs to an H-bridge.The exception is when both inputs are high. In this case, the inputs are pulled together as a motor break. A truth table can be seen in Table \ref{tbl:drv8872-truth6}.
 
@@ -110,14 +129,12 @@ its input is relatively easy to interface with from our microcontroller, and it 
 	\label{tbl:Motor Driver Comparison}
 \end{table}
 
-
 \noindent To measure the speed of the motor, a servo horn with 6 spokes was attached and a beam break sensor was mounted on the motor with the spoke traveling through the beam. The signal line of the beam break sensor was connected to an Arduino that measured the frequency by incrementing a count in an interrupt triggered on a pin change. The ISR just incremented a count that was printed out and reset every 5 seconds. Some issues arose with this system, however, since there was a small amount of bouncing on the rising and falling edges, leading to multiple readings for each beam break. This was solved by placing a 10nF capacitor from the signal line to ground. Since this number was triggered 12 times per revolution and printed out every 5 seconds, the actual printed value happened to be in revolutions per minute, as shown in \ref{eqn:motor_driver_test}.
-%insert a figure of the encoder setup
+
 \begin{equation}
 rpm = \frac{1 rev}{12 ticks} * \frac{1}{5} * \frac{60 seconds}{1 minute}
 \label{eqn:motor_driver_test}
 \end{equation}
-%insert equation for motor speed calculation
 
 \noindent During initial testing, the motor driver was wired up with $V_m$ of 8.4V, logic voltage of 5V, a 10k$\Omega$ pull up resistor on nFault, Isen grounded, and the motor outputs connected to a DC motor. During this test, one of the inputs was connected to an Arduino Uno, outputting a constant PWM wave using the \texttt{analogWrite()} function with a duty cycle of approximately 50\%. The motor turned, but very slowly and with a high pitched whine. When a 100$\mu$F capacitor was placed from $V_m$ to ground, the motor spun up to full speed and the whining sound went away.
 
