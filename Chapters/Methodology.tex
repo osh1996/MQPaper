@@ -85,6 +85,45 @@ Preliminary joint control board design was done very early on in the project. Un
 	\label{fig:2nd_joint_board_block}
 \end{figure}
 
+\subsubsection{Preliminary Price Breakdown}
+Initially, one of the goals of this project was to produce a very low cost joint board. An estimate that matches the joint board block diagram from Figure \ref{fig:nice_prelim_joint_board_block} can be seen in Table \ref{tbl:Summary of Parts Selection}.
+\begin{table}[H]
+	\centering
+	\caption{Summary of Parts Selection}
+	
+	\begin{tabular}{|c|c|c|c|}
+		
+		\hline
+		Function & Part name & Price (qty: 1) & Price (qty: 1k) \\
+		\hline
+		
+		CAN Controller & MCP2515 & \$1.87 & \$1.42 \\
+		
+		CAN Transceiver & MCP2561 & \$0.90 & \$0.68 \\
+		
+		ADC & MCP3202 & \$2.61 & \$1.98 \\
+		
+		MCU & MSP430G2553 & \$2.41 & \$1.18 \\
+		
+		Motor Controller & DRV8872 & \$2.17 & \$1.06 \\
+		
+		3.3V Voltage Regulator & LP2950-33 & \$0.47 & \$0.13 \\
+		
+		Current Sensor & ACS723LLC10AB & \$5.53 & \$2.36 \\
+		
+		Encoder & AS5055a & \$8.07 & \$5.48 \\
+		\hline
+		\hline
+		Price (qty: 1) & \$24.03 & & \\
+		
+		Price (qty: 1k) & \$14.30 & & \\
+		\hline
+		
+	\end{tabular}
+	
+	\label{tbl:Summary of Parts Selection}
+\end{table}
+
 \subsubsection{Motor Driver}
 The DC motor driver selected was the DRV8872. This driver takes in two inputs, in1 and in2, which affect the output much like inputs to an H-bridge.The exception is when both inputs are high. In this case, the inputs are pulled together as a motor break. A truth table can be seen in Table \ref{tbl:drv8872-truth6}.
 
@@ -228,45 +267,6 @@ MAX11665 & 3.3 & 0.5 & 8 & 2.73 \\
 \subsubsection{Hall Effect Encoder}
 An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
 %TODO: Finish paragraph
-
-
-
-\begin{table}[H]
-	\centering
-	\caption{Summary of Parts Selection}
-
-\begin{tabular}{|c|c|c|c|}
-
-\hline
-Function & Part name & Price (qty: 1) & Price (qty: 1k) \\
-\hline
-
-CAN Controller & MCP2515 & \$1.87 & \$1.42 \\
-
-CAN Transceiver & MCP2561 & \$0.90 & \$0.68 \\
-
-ADC & MCP3202 & \$2.61 & \$1.98 \\
-
-MCU & MSP430G2553 & \$2.41 & \$1.18 \\
-
-Motor Controller & DRV8872 & \$2.17 & \$1.06 \\
-
-3.3V Voltage Regulator & LP2950-33 & \$0.47 & \$0.13 \\
-
-Current Sensor & ACS723LLC10AB & \$5.53 & \$2.36 \\
-
-Encoder & AS5055a & \$8.07 & \$5.48 \\
-\hline
-\hline
-Price (qty: 1) & \$24.03 & & \\
-
-Price (qty: 1k) & \$14.30 & & \\
-\hline
-
-\end{tabular}
-
-	\label{tbl:Summary of Parts Selection}
-\end{table}
 
 
 \subsection{CAN Bus}
