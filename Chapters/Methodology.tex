@@ -1,13 +1,21 @@
 \section{Methodology}
 %todo: add introduction to methodology
+Many engineering decisions were made during the course of this project. Decisions as large as how any joints the arm would support, and as small as which variable type would be best for a certain variable were made with 
+
 \subsection{System Design}
 %todo: methodology->system design
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.4]{system_coms_diagram}
+	\caption{Block diagram of the entire modular arm system}
+	\label{fig:system_block_diagram}
+\end{figure}
 
 \subsection{Joint Control Board}
 The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design.
 
 \subsubsection{Overview of Design}
-%todo: methodology->
+%todo: methodology->Joint control board->overview of design
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{jcb_block_diagram}
@@ -300,8 +308,14 @@ CAN specification states that the CAN bus needs to be terminated on both ends by
 
 \noindent One method was to require the end user to attach a unique component, such as an end effector, at either end of the bus. This would effectively mean that an arm would always need a base module and an end effector to function properly. This rigid definition was not something we wanted to enforce on the end user, so instead we came up with a auto-disconnect circuit to disconnect the terminating resistor if another joint is added to the arm.
 
-\noindent The way this works is essentially just a MOSFET inverter. The MOSFET drain and source connect the CAN Hi and CAN Lo lines through a 120$\Omega$ resistor and the gate is pulled up to $V_{DD}$ through a 1l$\Omega$ resistor. When the next joint is connected, the gate is connected to ground and the MOSFET is opened, disconnecting the CAN Hi and CAN Lo lines. When there is no joint connected, the MOSFET is closed, effectively acting as a 5$\Omega$ resistor in series with the 120$\Omega$ resistor. This new 125$\Omega$ resistance is within tolerance in the CAN specifications which state that the resistance must be between 50$\Omega$ and 70$\Omega$.
-%TODO: insert image of CAN termination schematic
+\noindent The way this works is through a MOSFET switch, seen in Figure \ref{fig:can_terminate_circ}. The MOSFET drain and source connect the CAN Hi and CAN Lo lines through a 120$\Omega$ resistor and the gate is pulled up to $V_{DD}$ through a 1l$\Omega$ resistor. When the next joint is connected, the gate is connected to ground and the MOSFET is opened, disconnecting the CAN Hi and CAN Lo lines. When there is no joint connected, the MOSFET is closed, effectively acting as a 5$\Omega$ resistor in series with the 120$\Omega$ resistor. This new 125$\Omega$ resistance is within tolerance in the CAN specifications which state that the resistance must be between 50$\Omega$ and 70$\Omega$.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{CAN_terminate}
+	\caption{CAN bus auto-terminate circuit}
+	\label{fig:can_terminate_circ}
+\end{figure}
 
 \subsection{Arm Structure}
 Arm structure is not something we wanted to fully define, since the end user is supposed to create their own arms, but there were some basic components that needed clarification. The first of these is that every arm must begin with a base module and have some combination of up to four additional joints connected.  This allows the end-user flexibility in how they want to construct the arm without allowing them to add too many joints.
