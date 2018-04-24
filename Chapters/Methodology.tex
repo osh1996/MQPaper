@@ -152,6 +152,47 @@ Selecting a microcontroller was a key part of making the joint control board. Wi
 \subsubsection{Hall Effect Encoder}
 An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly get get some functionality out a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
 
+
+
+
+\begin{table}[H]
+	\centering
+	\caption{Summary of Parts Selection}
+
+\begin{tabular}{|c|c|c|c|}
+
+\hline
+Function & Part name & Price (qty: 1) & Price (qty: 1k) \\
+\hline
+
+CAN Controller & MCP2515 & \$1.87 & \$1.42 \\
+
+CAN Transceiver & MCP2561 & \$0.90 & \$0.68 \\
+
+ADC & MCP3202 & \$2.61 & \$1.98 \\
+
+MCU & MSP430G2553 & \$2.41 & \$1.18 \\
+
+Motor Controller & DRV8872 & \$2.17 & \$1.06 \\
+
+3.3V Voltage Regulator & LP2950-33 & \$0.47 & \$0.13 \\
+
+Current Sensor & ACS723LLC10AB & \$5.53 & \$2.36 \\
+
+Encoder & AS5055a & \$8.07 & \$5.48 \\
+\hline
+\hline
+Price (qty: 1) & \$24.03 & & \\
+
+Price (qty: 1k) & \$14.30 & & \\
+\hline
+
+\end{tabular}
+
+	\label{tbl:drv8872-truth6}
+\end{table}
+
+
 \subsection{CAN Bus}
 \subsubsection{Determining Joint Placement with Message ID}
 CAN bus will be used to communicate between the base and joints. A limitation of CAN is that there is no way of determining the position of a module on the bus. This is important for controlling a robot arm since joint 1 is controlled differently from joint 2, etc. In order to determine the position of a joint board on the bus, another method is needed. The CAN message ID contains 11 bits in the standard frame.
