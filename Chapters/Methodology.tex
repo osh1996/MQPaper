@@ -565,6 +565,16 @@ A PCB was made for each of the major subsystems as a more final test. The subsys
 
 \noindent The joint control board Boosterpack had the CAN transceiver $V_{CC}$ and GND pins swapped as well as needing the motor direction pin to be moved from one pin to another. This change came about due to the Launchpad construction. Two of the pins were connected internally but labeled differently, so the motor direction pin was swapped in code, the trace was cut, and wire was soldered to the new pin. These changes can be seen in Figure \ref{fig:jcb_boosterpack}. Another revision of the joint control board Boosterpack was made but not ordered due to time constraints.
 
+\subsubsection{Joint Control Board Code}
+%TODO: talk about RTOS, put flowchart, talk about CAN challenges
+
+\subsection{Base Module}
+%TODO: this section
+\subsubsection{Overview of Base Module Design}
+%TODO: put base module block diagram in
+\subsubsection{Base Module Code}
+%TODO: talk about RTOS, Init and runtime states, put CAN joint update pictures
+
 \subsection{Arm Structure}
 Arm structure is not something we wanted to fully define, since the end user is supposed to create their own arms, but there were some basic components that needed clarification. The first of these is that every arm must begin with a base module and have some combination of up to four additional joints connected.  This allows the end-user flexibility in how they want to construct the arm without allowing them to add too many joints.
 
