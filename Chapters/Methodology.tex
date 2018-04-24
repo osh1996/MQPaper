@@ -1,6 +1,6 @@
 \section{Methodology}
 %todo: add introduction to methodology
-Many engineering decisions were made during the course of this project. Decisions as large as how any joints the arm would support, and as small as which variable type would be best for a certain variable were made with 
+Many engineering decisions were made during the course of this project. Decisions as large as how any joints the arm would support, and as small as which type would be fitting for a certain variable. These decisions were all made in order to uphold the design goals of our project. 
 
 \subsection{System Design}
 %todo: methodology->system design
@@ -13,8 +13,7 @@ Many engineering decisions were made during the course of this project. Decision
 
 
 \subsection{Fourth Joint and Existing Arm}
-%TODO: insert solidworks .dwg files and place them in the correct spot
-In order to show that our control system can be integrated with other arms, we designed a fourth joint to connect to an existing arm. By showing that we can add a newly designed joint to our existing arm, we are creating a proof-of-concept that shows the versatility of our control system.  The design of the fourth joint was done in Solidworks, a software that allows users to design objects in a 3-D space \cite{Solidworks}. Once we had designed the fourth link, we moved forward to the rapid-prototyping stage where we took our parts designed in Solidworks and converted them to 3-D printable models.  We then used the software Cura \cite{Cura} and the Lulzbot Taz 6 3-D printer \cite{Taz6} to fabricate a first iteration of our fourth joint.  From here we continued to refine our parts and re-print pieces with tighter tolerances until they came together to make a fourth joint that interfaces with our control system.
+In order to show that our control system can be integrated with other arms, we designed a fourth joint to connect to an existing arm. By showing that we can add a newly designed joint to our existing arm, we are creating a proof-of-concept that shows the versatility of our control system.  The design of the fourth joint was done in Solidworks, a software that allows users to design objects in a 3-D space \cite{Solidworks}. Once we had designed the fourth link, we moved forward to the rapid-prototyping stage where we took our parts designed in Solidworks and converted them to 3-D printable models.  We then used the software Cura \cite{Cura} and the Lulzbot Taz 6 3-D printer \cite{Taz6} to fabricate a first iteration of our fourth joint.  From here we continued to refine our parts and re-print pieces with tighter tolerances until they came together to make a fourth joint that interfaces with our control system. To find drawings of our solidworks parts, please refer to Appendix H \ref{app:SolidworksDrawings}
 
 \subsubsection{Fourth Joint Design}
 
@@ -587,7 +586,7 @@ A PCB was made for each of the major subsystems as a more final test. The subsys
 Arm structure is not something we wanted to fully define, since the end user is supposed to create their own arms, but there were some basic components that needed clarification. The first of these is that every arm must begin with a base module and have some combination of up to four additional joints connected.  This allows the end-user flexibility in how they want to construct the arm without allowing them to add too many joints.
 
 
-\subsection{Code Library}
+\subsection{Software Application}
 The code library is another important part of what we did to make our arm work. It controls all of the electrical components via the sending of packets out to the base module over a Serial UART line. It handle a lot of the more involved calculations for controlling the arm like the forward and inverse kinematics.  
 
 
@@ -596,7 +595,6 @@ Maven is a utility for Java-based projects that seeks to provide a uniform build
 
 
 \subsubsection{Program flow}
-%TODO: Add link to explain what a class and object are
 
 \begin{figure}[H]
 \centering
@@ -632,7 +630,6 @@ Multithreading is the process of creating new threads in order to let code run i
 
 
 \subsubsection{Saving of Configuration}
-%TODO: Talk about Gson
 In order to store the information that we need to be persistent between different instances of the application, we used a library called Gson made by Google \cite{gson}. This library's primary use is to take data and store it in a .json file, a kind of simplistic database.  We used this library to save the joint object which were the data containers about the configuration of the arm. All of the saving and loading is done via the GUI so that the user can either load information about an arm themselves, or they can change the values using the GUI text fields and save a new configuration when it needs updating. Doing so allows the user to always be able to either modify and update the constants inside the data container that is the Joint object and have those objects be saved and loaded during each runtime of the application. Pictured below is the GUI tab which stores all of the constants for the arm such as encoder home values and PID constants, as well as has buttons to interface with the saving, loading and startup of our program.
 
 \begin{figure}[H]
