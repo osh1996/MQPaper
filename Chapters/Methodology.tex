@@ -228,7 +228,7 @@ G = 5 + 5(\frac{R_1}{R_2})
 \noindent The INA332 needs a voltage reference to use as the 0V differential output. Initially, two 1k$\Omega$ resistors were used to apply this voltage. This caused the output to change nonlinearly with the input voltage. The resistors were replaced with a LM358 dual operational amplifier, configured as a voltage buffer with the input connected to a potentiometer. The INA332 inputs were connected to ground and the LM358 buffer potentiometer was adjusted to set the 0V output to  $\frac{1}{2} V_{cc}$. This voltage was 1.846V. Instead of a potentiometer, two resistors were used to create this 1.846V offset.
 
 \subsubsection{TM4C123GXL Launchpad}
-Selecting a microcontroller was a key part of making the joint control board. Without a decently capable MCU, the joint board would not be able to function as we want it to, but buying the best microcontroller on the market can be costly. The EK-TM4C123GXL is an ARM Coretex M4f-based microcontroller evaluation kit from TI that has many peripherals to allow us to control the joint board without buying many external peripherals. The perihperals on this chip that we will need include a CAN controller, 12-bit ADC, USB controller, SSI controller, PWM controller, and many GPIO. These perihperals were implemented separately with a test circuit configured to verify that each peripheral was functioning correctly.
+Selecting a microcontroller was a key part of making the joint control board. Without a capable MCU, the joint board would not be able to function as we want it to, but buying the best microcontroller on the market can be costly. The EK-TM4C123GXL is an ARM Coretex M4f-based microcontroller evaluation kit from TI that has many peripherals to allow us to control the joint board without buying many external peripherals. The perihperals on this chip that we will need include a CAN controller, 12-bit ADC, USB controller, SSI controller, PWM controller, and many GPIO. These perihperals were implemented separately with a test circuit configured to verify that each peripheral was functioning correctly.
 
 \noindent Several peripherals were needed to achieve the desired functionality from our microcontroller. A test board was set up in order to test and verify that each of these peripherals was setup properly and working as expected. The test board consisted of a potentiometer connected to an ADC pin, an SPI controlled ADC (MCP3202), the 1:2 demultiplexer (SN74LVC1G18), CAN transceiver (TC332), and some LEDs.
 
@@ -297,18 +297,34 @@ CAN bus will be used to communicate between the base and joints. A limitation of
 %TODO: insert figure explaining message ID breakdown
 
 \subsubsection{Implementing a Simple CAN Bus}
-The preliminary CAN setup consisted of two TM4C Launchpads, one with transmit code and one with receive code. The transmitting board was set up for 1Mbps transmission with message ID = 2, and message length = 1 byte. The message data was a 4-bit value that incremented every time the message was successfully transmitted. A software delay was used to slow the transmission rate down to about every ~1.2 seconds. The receive board was set up for 1Mbps transmission with message ID = 0, message ID mask = 0, and message length = 1 byte. Setting both the message ID and mask to 0 signals the controller to accept any message. 4 LEDs were set up to see the CAN message data visually.
+The preliminary CAN setup consisted of two TM4C Launchpads, one with transmit code and one with receive code. The transmitting board was set up for 1Mbps transmission with message ID = 2, and message length = 1 byte. The message data was a 4-bit value that incremented every time the message was successfully transmitted. A software delay was used to slow the transmission rate down to about every ~second. The receive board was set up for 1Mbps transmission with message ID = 0, message ID mask = 0, and message length = 1 byte. Setting both the message ID and mask to 0 signals the controller to accept any message. 4 LEDs were set up to see the CAN message data visually.
 %TODO: insert table of configuration data
 
-\noindent We had several problems getting this simple example to work. Initially, one of the jumper wires used for the CAN bus was broken, causing the CAN Hi lines on the transceivers to not be connected. The next problem was that the sample code provided by TI was not correct. When the CAN controller receives a valid message, it signals the processor with an interrupt. When a receive interrupt is processed by the example code, the interrupt flag is cleared and then the message data is read in. The problem is that when the interrupt flag is cleared, the new data bit that signals that there is valid data available is cleared. To fix this, the operations must be switched so that message data is read in before the interrupt flag is cleared. Once this fix was applied, CAN communications were functional.
-%TODO: insert image of CAN bus test setup
+\noindent We had several problems getting this simple example to work. Initially, one of the jumper wires used for the CAN bus was broken, causing the CAN Hi lines on the transceivers to not be connected. The next problem was that the sample code provided by TI was not correct. When the CAN controller receives a valid message, it signals the processor with an interrupt. When a receive interrupt is processed by the example code, the interrupt flag is cleared and then the message data is read in. The problem is that when the interrupt flag is cleared, the new data bit that signals that there is valid data available is cleared. To fix this, the operations must be switched so that message data is read in before the interrupt flag is cleared. Once this fix was applied, CAN communications were functional. 
+
+\noindent During the debugging process, a logic analyzer (Saleae 8-channel logic analyzer) was used to verify correct transmission of CAN packets. The logic analyzer software can be seen in Figure \ref{fig:can_logic_analyzer} decoding a packet with ID 2, data length 1, data byte equaling 7, and a proper ACK signal. The x marks a bit that was inserted to keep the timing consistent among the transceivers. Additionally, Figure \ref{fig:can_TXD_RXD} shows the ACK bit on the RXD line (channel 2) and no ACK bit on the TXD line (channel 0).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{CAN_Logic_Analyzer}
+	\caption{CAN bus as viewed in the logic analyzer software}
+	\label{fig:can_logic_analyzer}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{CAN_TXD_to_RXD}
+	\caption{CAN TXD (channel 0) and RXD (channel 2) in the logic analyzer software}
+	\label{fig:can_TXD_RXD}
+\end{figure}
 
 \subsubsection{CAN Termination}
 CAN specification states that the CAN bus needs to be terminated on both ends by 120$\Omega$ resistors. The purpose of these resistors is to help mitigate signal reflections as well as pull the CAN Hi and CAN Lo lines together when the bus state is recessive. Since the resistors need to be at either end of the CAN bus, using normal resistors requires a static bus configuration. Out system will not necessarily have a fixed configuration, though, so a different solution was needed.
 
 \noindent One method was to require the end user to attach a unique component, such as an end effector, at either end of the bus. This would effectively mean that an arm would always need a base module and an end effector to function properly. This rigid definition was not something we wanted to enforce on the end user, so instead we came up with a auto-disconnect circuit to disconnect the terminating resistor if another joint is added to the arm.
 
-\noindent The way this works is through a MOSFET switch, seen in Figure \ref{fig:can_terminate_circ}. The MOSFET drain and source connect the CAN Hi and CAN Lo lines through a 120$\Omega$ resistor and the gate is pulled up to $V_{DD}$ through a 1l$\Omega$ resistor. When the next joint is connected, the gate is connected to ground and the MOSFET is opened, disconnecting the CAN Hi and CAN Lo lines. When there is no joint connected, the MOSFET is closed, effectively acting as a 5$\Omega$ resistor in series with the 120$\Omega$ resistor. This new 125$\Omega$ resistance is within tolerance in the CAN specifications which state that the resistance must be between 50$\Omega$ and 70$\Omega$.
+\noindent The way this works is through a MOSFET switch, seen in Figure \ref{fig:can_terminate_circ}. The MOSFET (part number BS170) drain and source connect the CAN Hi and CAN Lo lines through a 120$\Omega$ resistor and the gate is pulled up to $V_{DD}$ through a 1l$\Omega$ resistor. When the next joint is connected, the gate is connected to ground and the MOSFET is opened, disconnecting the CAN Hi and CAN Lo lines. When there is no joint connected, the MOSFET is closed, effectively acting as a 5$\Omega$ resistor in series with the 120$\Omega$ resistor. This new 125$\Omega$ resistance is within tolerance in the CAN specifications which state that the resistance must be between 50$\Omega$ and 70$\Omega$.
+%todo: cite BS170 datasheet
 
 \begin{figure}[H]
 	\centering
