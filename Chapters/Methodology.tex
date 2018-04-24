@@ -158,16 +158,20 @@ The joint board underwent significant revisions, outlined in Section \ref{sec:pj
 
 \subsubsection{Joint Angle Sensor}
 \label{sec:jas}
-Potentiometers seem like a good choice due to their simplicity and high accuracy capabilities. However, they do not lend themselves well to this application because of how quickly they wear out. Over time, as the joints move to different positions, the potentiometers will wear out quickly and cause inaccurate readings. Additionally, long lifespan and high resolution potentiometers can be very expensive. Furthermore, potentiometers are large and can be difficult to mount. Finally, the hard stop on the potentiometer means the joint angles will be limited to a certain range (typically about 270 \textdegree for single turn potentiometers).
+As mentioned in Section \ref{sec:control_board}, joint angle sensing is one of the main tasks needed in order to control a robot arm. Without this key sensor, the robot arm controller has no way of knowing where its links actually are in space. The type of sensor is very important since each has different design considerations that need to be taken into account.
+
+\noindent Potentiometers seem like a good choice due to their simplicity and high accuracy capabilities. However, they do not lend themselves well to this application because of how quickly they wear out. Over time, as the joints move to different positions, the potentiometers will wear out quickly and cause inaccurate readings. Additionally, long lifespan and high resolution potentiometers can be very expensive. Furthermore, potentiometers are large and can be difficult to mount. Finally, the hard stop on the potentiometer means the joint angles will be limited to a certain range (typically about 270 \textdegree for single turn potentiometers).
 
 \noindent The next obvious solution is to use optical encoders because they will not wear out and offer very high resolution capabilities. These sensors are not well suited for this application, however, since they are typically expensive, especially for high resolution encoders - and ones that are capable of reading absolute position. Additionally these sensors are somewhat bulky and would take up too much space in the closed environment of a joint. 
 
 \noindent This leaves us with Hall effect sensors. These sensors are very small and moderately high resolution while also being a contact-free sensor, so wearing them out will not be a concern. A main concern with Hall effect sensors is that they need to be mounted somewhat precisely and carefully. Traditional machining methods make this difficult to accomplish, but 3D printing allows us to easily overcome this challenge.  Another concern is external electromagnetic interference, but with somewhat careful circuit board design, we should be able to minimize this issue.
 
 \subsubsection{Motor Current Sensor}
-A shunt resistor seems practical due to the simplicity of the design, but careful tuning must be done in order to get the noise levels down to a reasonable amount. In addition to this, the power loss when using a shunt resistor could cause the arm to stall before anticipated. When the shunt resistor takes power from the motor, the whole motor curve slides inward, decreasing the maximum power output. Trace resistance would be a good alternative, but requires calibration after the circuit is constructed. 
+As mentioned in Section \ref{sec:control_board}, the motor current is another important factor in controlling a robot arm. Since motor current is proportional to motor torque, knowing the current lets the controller know how much force the arm is putting on a load, to give an example. There are a few different technologies that can sense the current through a motor, each with their own design considerations that must be taken into account.
 
-\noindent Instead of these, we decided to use a Hall effect current sensor. Hall effect current sensors are ready-made sensors that give low noise, properly calibrated outputs, are not very expensive, and are easy to integrate into a circuit design. These sensors have extremely small power losses to the motor. The main drawback of these sensors is that they have a low bandwidth, but we are using DC motors so this should not be a problem. Some care will need to be taken when placing these on the circuit, however, since they are sensitive to external magnetic fields.
+\noindent A shunt resistor seems practical due to the simplicity of the design, but careful tuning must be done in order to get the noise levels down to a reasonable amount. In addition to this, the power loss when using a shunt resistor could cause the arm to stall before anticipated. When the shunt resistor takes power from the motor, the whole motor curve slides inward, decreasing the maximum power output. Trace resistance would be a good alternative, but requires calibration after the circuit is constructed. 
+
+\noindent Instead of these, we decided to use a Hall effect current sensor. Hall effect current sensors are ready-made sensors that give low noise, properly calibrated outputs, are not very expensive, and are easy to integrate into a circuit design. These sensors have extremely small power losses to the motor. The main drawback of these sensors is that they have a low bandwidth, but we are using DC motors so this should not be a problem. Some care will need to be taken when placing these on the circuit, however, since they are sensitive to external magnetic fields. The hall effect current sensor chosen for this design was the ACS722. This device was selected by using Table \ref{tbl:Current Sense IC Comparison}.
 
 \begin{table}[H]
 	\centering
@@ -192,7 +196,9 @@ ACS725LLCTR-10AU & 3.3 & 0 to +10 & 264 & Analog & n \\
 \end{table}
 
 \subsubsection{Inter-board Communication}
-SPI and I$^2$C are mostly used for on-board, controller-to-peripheral communications and therefore are not a good choice for the base to control board communication. RS232 is not a good solution for this problem either because it is a single transmitter and single receiver per line. This leaves RS485 and CAN.
+Inter-board communication is the heart of any arm. Without this, the joints of an arm wouldn't know where how to move. A good, robust communication protocol that allows for simple transactions between boards is favorable for this application.
+
+\noindent SPI and I$^2$C are mostly used for on-board, controller-to-peripheral communications and therefore are not a good choice for the base to control board communication. RS232 is not a good solution for this problem either because it is a single transmitter and single receiver per line. This leaves RS485 and CAN.
 
 \noindent RS485 and CAN are similar in many ways, but with a few key differences that separate them. RS485 is very fast to transmit and simple to implement, but takes a lot of the controller's time to send packets. CAN has the advantage because the controller and transceiver control the transmission independent of the controller so the controller has more free time to process data. Another advantage CAN has over RS485 is the amount of error checking that goes on to ensure proper message transmission. For these reasons, we decided to use CAN to communicate between the base and control boards.
 
@@ -403,7 +409,29 @@ G = 5 + 5(\frac{R_1}{R_2})
 \subsubsection{Hall Effect Encoder}
 An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every 0.6ms in order for the device to not go into low power mode. With this in mind, a sampling speed of 1kHz was selected.
 
-\noindent In addition to the Arduino testing, tests were run with the TM4C123GH6PM and a test rig. %todo Add pictures of encoder test rig
+\noindent In addition to the Arduino testing, tests were run with the TM4C123GH6PM and a test rig. The encoder test rig underwent significant revision to improve its reliability and accuracy in position the magnet above the hall effect sensor. The first iteration can be seen in Figure \ref{fig:First Iteration of Encoder Test Rig} and the second iteration can be seen in Figures \ref{fig:Second Iteration of Encoder Test Rig, Magnet View} and \ref{fig:Second Iteration of Encoder Test Rig, Side View}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.35]{encoderTestRig1}
+	\caption{First Iteration of Encoder Test Rig}
+	\label{fig:First Iteration of Encoder Test Rig}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.06]{hallEffect2side}
+	\caption{Second Iteration of Encoder Test Rig, Side View}
+	\label{fig:Second Iteration of Encoder Test Rig, Side View}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.06]{hallEffect2Top}
+	\caption{Second Iteration of Encoder Test Rig, Magnet View}
+	\label{fig:Second Iteration of Encoder Test Rig, Magnet View}
+\end{figure}
 
 \subsubsection{TM4C123GXL Launchpad}
 Selecting a microcontroller was a key part of making the joint control board. Without a capable MCU, the joint board would not be able to function as we want it to, but buying the best microcontroller on the market can be costly. The EK-TM4C123GXL is an ARM Coretex M4f-based microcontroller evaluation kit from TI that has many peripherals to allow us to control the joint board without buying many external peripherals. The perihperals on this chip that we will need include a CAN controller, 12-bit ADC, USB controller, SSI controller, PWM controller, and many GPIO. These perihperals were implemented separately with a test circuit configured to verify that each peripheral was functioning correctly.
@@ -414,72 +442,8 @@ Selecting a microcontroller was a key part of making the joint control board. Wi
 
 \noindent The potentiometer was connected to PE0 which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s.
 
-
-\begin{table}[H]
-	\centering
-	\caption{ADC Selection}
-
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-& Supply & Sampling & SCLK & \\
-Part name & Voltage (V) & rate (MHz) & Freq (MHz) & Price (\$) \\
-\hline
-ADS7042 & 3.3 & 1 & 16 & 2.65 \\
-
-ADS7043 & 3.3 & 1 & 16 & 2.65 \\
-
-ADS7044 & 3.3 & 1 & 16 & 2.65 \\
-
-ADC121S021 & 3.3, 5 & 0.2 & 4 & 2.85 \\
-
-ADC121S051 & 3.3, 5 & 0.5 & 4 & 3.31 \\
-
-ADC121S101 & 3.3, 5 & 1 & 4 & 3.39 \\
-
-ADC7476 & 3.3, 5 & 1 & 20 & 3.41 \\
-
-MCP3201 & 3.3, 5 & 0.1 & 1.6 & 2.31 \\
-
-MAX11665 & 3.3 & 0.5 & 8 & 2.73 \\
-\hline
-\end{tabular}
-
-\label{tbl:ADC Selection}
-\end{table}
-
-\noindent Note: The MCP3202 is functionally the same as the MCP3201, except it has a second input channel.
-
-
-\subsubsection{Hall Effect Encoder}
-An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
-%TODO: Finish paragraph
-
-
-%TODO: Make images smaller
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth/4]{encoderTestRig1}
-\caption{First Iteration of Encoder Test Rig}
-\label{fig:First Iteration of Encoder Test Rig}
-\end{figure}
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth/4]{hallEffect2side}
-	\caption{Second Iteration of Encoder Test Rig, Side View}
-	\label{fig:Second Iteration of Encoder Test Rig, Side View}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth/4]{hallEffect2Top}
-	\caption{Second Iteration of Encoder Test Rig, Magnet View}
-	\label{fig:Second Iteration of Encoder Test Rig, Magnet View}
-\end{figure}
-
 \subsection{CAN Bus}
-The CAN bus is the spine of the control system, carrying messages from the base to each joint and back from each of the joints to the base. Unit tests and careful integration were done to 
+The CAN bus is the spine of the control system, carrying messages from the base to each joint and back from each of the joints to the base. Unit tests and careful integration were done to ensure that this tricky protocol was implemented properly and robustly while leaving room for future implementation of additional message types.
 
 \subsubsection{Determining Joint Placement with Message ID}
 CAN bus will be used to communicate between the base and joints. A limitation of CAN is that there is no way of determining the position of a module on the bus. This is important for controlling a robot arm since joint 1 is controlled differently from joint 2, etc. In order to determine the position of a joint board on the bus, another method is needed. The CAN message ID contains 11 bits in the standard frame.
