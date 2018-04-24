@@ -45,18 +45,25 @@ The process of prototyping our fourth joint started with creating an interface s
 %TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
 
 \subsubsection{Motor Selection}
-%TODO: More words here
-Specs:\\ 
+
+The performance of a DC motor can be characterized by measuring several key values: the stall torque, the stall current, the free running RPM, and the free running current. It's important that all the values be measured when the motor is given the same input voltage.\\
+
 \noindent
-\indent 8.4V\\ 
-\indent 32.3 kg cm stall\\
-\indent 5.25 A stall\\
-\indent .1 seconds/60 degrees free running (100 rpm)\\
-\indent .23 A free running\\
+Specifications:\\ 
+\noindent
+\indent Voltage: 8.4V \\
+\indent Stall torque: 32.3 kg cm stall \\
+\indent Stall current: 5.25 A stall \\
+\indent Free running RPM: 0.1 seconds/60 degrees (100 rpm) \\
+\indent Free running current: 0.23 A \\
+
+
+
+
 
 \begin{table} [H]
 	\centering
-	\caption{HV5923MG Motor Data}
+	\caption{HV5923MG Motor Curve Data from experimental testing}
 	\label{tab:MotorData}
 	\begin{tabular}{|p{1cm}|p{1.2cm}|p{1.4cm}|p{1cm}|p{1cm}|p{1.5cm}|p{1cm}|p{1cm}|p{1.1cm}|}
 		\hline
