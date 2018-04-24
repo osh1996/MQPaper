@@ -500,6 +500,8 @@ A PCB was made for each of the major subsystems as a more final test. The subsys
 
 \subsubsection{Joint Control Board Code}
 %TODO: talk about RTOS, put flowchart, talk about CAN challenges
+The joint control board code uses TI's RTOS for TivaWare. The main reason for this decision was to gain access to the task synchronization that the RTOS provides to compartmentalize the code into different threads. A code flowchart can be seen in Figure \ref{fig:jcb_code_flowchart}. There are many threads running alongside one another, but they are all fairly separated in terms of their functionality. Each thread handles a single function, for example there is a thread for processing encoder data. This thread is released on a 1kHz software timer.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.35]{jcb_code_flowchart}
