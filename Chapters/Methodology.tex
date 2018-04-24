@@ -167,7 +167,7 @@ As mentioned in Section \ref{sec:control_board}, the motor current is another im
 
 \noindent A shunt resistor seems practical due to the simplicity of the design, but careful tuning must be done in order to get the noise levels down to a reasonable amount. In addition to this, the power loss when using a shunt resistor could cause the arm to stall before anticipated. When the shunt resistor takes power from the motor, the whole motor curve slides inward, decreasing the maximum power output. Trace resistance would be a good alternative, but requires calibration after the circuit is constructed. 
 
-\noindent Instead of these, we decided to use a Hall effect current sensor. Hall effect current sensors are ready-made sensors that give low noise, properly calibrated outputs, are not very expensive, and are easy to integrate into a circuit design. These sensors have extremely small power losses to the motor. The main drawback of these sensors is that they have a low bandwidth, but we are using DC motors so this should not be a problem. Some care will need to be taken when placing these on the circuit, however, since they are sensitive to external magnetic fields.
+\noindent Instead of these, we decided to use a Hall effect current sensor. Hall effect current sensors are ready-made sensors that give low noise, properly calibrated outputs, are not very expensive, and are easy to integrate into a circuit design. These sensors have extremely small power losses to the motor. The main drawback of these sensors is that they have a low bandwidth, but we are using DC motors so this should not be a problem. Some care will need to be taken when placing these on the circuit, however, since they are sensitive to external magnetic fields. The hall effect current sensor chosen for this design was the ACS722. This device was selected by using Table \ref{tbl:Current Sense IC Comparison}.
 
 \begin{table}[H]
 	\centering
@@ -403,14 +403,13 @@ G = 5 + 5(\frac{R_1}{R_2})
 \noindent The INA332 needs a voltage reference to use as the 0V differential output. Initially, two 1k$\Omega$ resistors were used to apply this voltage. This caused the output to change nonlinearly with the input voltage. The resistors were replaced with a LM358 dual operational amplifier, configured as a voltage buffer with the input connected to a potentiometer. The INA332 inputs were connected to ground and the LM358 buffer potentiometer was adjusted to set the 0V output to  $\frac{1}{2} V_{cc}$. This voltage was 1.846V. Instead of a potentiometer, two resistors were used to create this 1.846V offset.
 
 \subsubsection{Hall Effect Encoder}
-An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
-%TODO: Finish paragraph
+An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every 0.6ms in order for the device to not go into low power mode. With this in mind, a sampling speed of 1kHz was selected.
 
+\noindent In addition to the Arduino testing, tests were run with the TM4C123GH6PM and a test rig. The encoder test rig underwent significant revision to improve its reliability and accuracy in position the magnet above the hall effect sensor. The first iteration can be seen in Figure \ref{fig:First Iteration of Encoder Test Rig} and the second iteration can be seen in Figures \ref{fig:Second Iteration of Encoder Test Rig, Magnet View} and \ref{fig:Second Iteration of Encoder Test Rig, Side View}.
 
-%TODO: Make images smaller
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{encoderTestRig1}
+	\includegraphics[scale=0.35]{encoderTestRig1}
 	\caption{First Iteration of Encoder Test Rig}
 	\label{fig:First Iteration of Encoder Test Rig}
 \end{figure}
@@ -418,14 +417,14 @@ An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{hallEffect2side}
+	\includegraphics[scale=0.06]{hallEffect2side}
 	\caption{Second Iteration of Encoder Test Rig, Side View}
 	\label{fig:Second Iteration of Encoder Test Rig, Side View}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{hallEffect2Top}
+	\includegraphics[scale=0.06]{hallEffect2Top}
 	\caption{Second Iteration of Encoder Test Rig, Magnet View}
 	\label{fig:Second Iteration of Encoder Test Rig, Magnet View}
 \end{figure}
@@ -440,7 +439,7 @@ Selecting a microcontroller was a key part of making the joint control board. Wi
 \noindent The potentiometer was connected to PE0 which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s.
 
 \subsection{CAN Bus}
-The CAN bus is the spine of the control system, carrying messages from the base to each joint and back from each of the joints to the base. Unit tests and careful integration were done to ensure that this tricky protocol was implemented properly and robustly.
+The CAN bus is the spine of the control system, carrying messages from the base to each joint and back from each of the joints to the base. Unit tests and careful integration were done to ensure that this tricky protocol was implemented properly and robustly while leaving room for future implementation of additional message types.
 
 \subsubsection{Determining Joint Placement with Message ID}
 CAN bus will be used to communicate between the base and joints. A limitation of CAN is that there is no way of determining the position of a module on the bus. This is important for controlling a robot arm since joint 1 is controlled differently from joint 2, etc. In order to determine the position of a joint board on the bus, another method is needed. The CAN message ID contains 11 bits in the standard frame.

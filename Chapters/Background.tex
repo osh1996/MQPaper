@@ -72,7 +72,8 @@ After examining all of these different robot arms accomplished their respective 
 
 % Research begins here?
 \subsection{Control board}
-The control board is meant to be implemented as an independent module that interfaces with a main controller module. Its tasks are to send and receive data from the main controller and control the position of a single motor. As such, the main factors that must be taken into account when designing the control board are methods of measuring joint position and motor torque, as well as communicate with an off-board controller. Motor torque is proportional to motor current. Therefore, the motor torque will be calculated from the measured current through the motor.
+\label{sec:control_board}
+The control board is meant to be implemented as an independent module that interfaces with a main controller module. Its tasks are to send and receive data from the main controller and control the position of a single motor. As such, the factors that must be taken into account when designing the control board are methods of measuring joint position and motor torque, as well as ways to communicate with an off-board controller. Motor torque is proportional to motor current, and motor torque lets the controller know how hard the arm is pushing something. Therefore, the motor torque will be calculated from the measured current through the motor.
 \subsubsection{Joint Position Detection}
 Angular position sensing must be used to determine the joint angle of the motor. There are several commonly used methods of determining angular position, including potentiometers, optical encoders, and Hall effect sensors \cite{Pot_vs_Sensor,Choose_Sensor_Technology,Choose_Position_Sensor}. A comparison of the different angular sensors can be seen in Table \ref{tbl:Angular_pos_sensors}. \\
 \newline
