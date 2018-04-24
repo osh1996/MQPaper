@@ -105,6 +105,7 @@ The DC motor driver selected was the DRV8872. This driver takes in two inputs, i
 \end{table}
 
 \noindent This motor driver was chosen because is provided high enough current limit for the selected motors to operate normally and low on resistance to provide more power to the motors and not generate excess heat. Another benefit of the DRV8872 is that it has a simple interface of 2 PWM inputs which is relatively easy to interface with from our microcontroller.
+ 
 \begin{table}[H]
 	\centering
 	\caption{Motor Driver Comparison}
@@ -187,7 +188,7 @@ Selecting a microcontroller was a key part of making the joint control board. Wi
 \noindent As a temporary stand in for the AS5055 absolute Hall effect encoder to test the SSI peripheral, a MCP3202 12-bit, 2 channel ADC was used. Both devices use SPI to communicate their sensor data back to the MCU, and the packets are similar in structure. Some differences between the two that can be changed are a maximum sample rate for the AS5055 of ~1ms as opposed to the few SCLK cycle delays for the MCP3202. The AS5055 has a maximum SCLK frequency of up to 10MHz at 3.3V while the MCP3202 has a limit of 900kHz at 3.3V. 
 
 
-\noindent The potentiometer was connected to PB2 which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s.
+\noindent The potentiometer was connected to PE0 which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s.
 
 \begin{table}[H]
 	\centering
@@ -195,7 +196,8 @@ Selecting a microcontroller was a key part of making the joint control board. Wi
 
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-Part name & Supply Voltage (V) & Sampling rate (MHz) & SCLK Freq (MHz) & Price (\$) \\
+& Supply & Sampling & SCLK & \\
+Part name & Voltage (V) & rate (MHz) & Freq (MHz) & Price (\$) \\
 \hline
 ADS7042 & 3.3 & 1 & 16 & 2.65 \\
 
@@ -278,7 +280,7 @@ CAN bus will be used to communicate between the base and joints. A limitation of
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{cuteDipSwitch}
+\includegraphics[scale=0.2]{cuteDipSwitch}
 \caption{8-channel DIP Switch}
 \label{fig:8_channel DIP Switch}
 \end{figure}
