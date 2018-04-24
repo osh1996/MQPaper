@@ -21,7 +21,7 @@ The process of prototyping our fourth joint started with creating an interface s
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[angle=90, scale=0.1]{current_arm_connector}
+	\includegraphics[angle=90, scale=0.07]{current_arm_connector}
 	\caption{Current Arm End Effector Mount}
 	\label{Current Arm Encoder Mount}
 \end{figure}
@@ -351,6 +351,8 @@ rpm = \frac{1 rev}{12 ticks} * \frac{1}{5} * \frac{60 seconds}{1 minute}
 \noindent During initial testing, the motor driver was wired up with $V_m$ of 8.4V, logic voltage of 5V, a 10k$\Omega$ pull up resistor on nFault, Isen grounded, and the motor outputs connected to a DC motor. During this test, one of the inputs was connected to an Arduino Uno, outputting a constant PWM wave using the \texttt{analogWrite()} function with a duty cycle of approximately 50\%. The motor turned, but very slowly and with a high pitched whine. When a 100$\mu$F capacitor was placed from $V_m$ to ground, the motor spun up to full speed and the whining sound went away.
 
 \noindent Further testing revealed a strange behavior when increasing the frequency of the input PWM signal. The motor spun normally at low frequencies of around 500Hz, but at around 1kHz the motor started slowing down and making a whining sound. The problem worsened with increasing frequency. Eventually, this problem was fixed by using a power supply that could output 3A and adding capacitors from in1 and in2 to ground. With these additions, the motor driver functioned as expected.
+
+%TODO: We ordered a 0.1 ohm, 2 watt resistor to connect Isen to ground. It needed to be a 2 watt resistor instead of a 1 watt resistor because the pin could rise to .35 volts before the motor driver shuts down and (3.5)^2 / 0.1 is a number that's bigger than 1 watt
 
 
 \subsubsection{Demultiplexer}
