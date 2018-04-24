@@ -1,26 +1,4 @@
 \section{Methodology}
-\subsection{Preliminary Joint Control Board Designs}
-Preliminary joint control board design was done very early on in the project. Unfortunately, the majority of this work was done before much of the necessary research for part selection, leading to many revisions and re-designs, though the main concepts stayed in place. This section outlines the preliminary designs and revisions of those up until the selection of the TM4C123GH6PM microcontroller, at which point the design solidified and forward progress began.
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.25]{first_joint_board_block_diagram}
-	\caption{First draft of the complete joint board block diagram}
-	\label{fig:1st_joint_board_block}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.25]{second_joint_board_block_diagram}
-	\caption{Mostly complete preliminary joint board block diagram}
-	\label{fig:2nd_joint_board_block}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.4]{link_block_diagram}
-	\caption{Iteration of preliminary joint board block diagram}
-	\label{fig:nice_prelim_joint_board_block}
-\end{figure}
 
 \subsection{Joint Control Board Part selection}
 Selecting the types of sensors to use for the control board was a very important step of the control board design. There are many different types of sensors to accomplish each major goal that the control board must accomplish.
@@ -221,7 +199,7 @@ The process of prototyping our fourth joint started with creating an interface s
 \begin{figure}[H]
 	\centering
 	\includegraphics[angle=90, scale=0.1]{current_arm_connector}
-	\caption{Current Arm Encoder Mount}
+	\caption{Current Arm End Effector Mount}
 	\label{Current Arm Encoder Mount}
 \end{figure}
 
@@ -240,7 +218,7 @@ The process of prototyping our fourth joint started with creating an interface s
 \noindent To create a prototype of our fourth joint, we determined the mechanical requirements of our arm and worked backwards to create a rapid prototyping model (RPM).  RPMs are usually CAD models which are able to be turned into a functional model using a 3-D printer. or other method.  Once the functional model was 3-D printed, we would assemble the parts and test how they all fit together.  With each new functional model we revised our RPM and printed a new functional model in order to meet the requirements for our fourth joint. This process of building, revising based on testing a physical prototype was only made possible due to the advances in recent years in 3-D printing technology making it feasible to create these prototypes so quickly while still having them be robust. 
 
 \subsubsection{3-D Printing}
-3-D printing is convenient because it allows the user to manufacture parts in a novel way. Overall, we chose to 3-D print our fourth joint because it was what we were most familiar with and we had easy access to multiple 3-D printers.  While the process of 3-D printing a part might not be as accurate as other more conventional methods of machining parts, it is a much easier method to learn and has a much quicker turnaround time. For our choice of 3-D printer, we used the LulzBot Taz 6 \cite{Taz6} with a single extruder head (Version 2.1) and 2.65mm filament. This printer is readily available to us through the Undergraduate Robotics Lab. The resolution of the printer was fine enough that it was easily able to achieve the tight tolerances that we needed to print parts such as the timing belt teeth.    
+3-D printing is convenient because it allows the user to manufacture parts in a novel way. Overall, we chose to 3-D print our fourth joint because it was what we were most familiar with and we had easy access to multiple 3-D printers.  While the process of 3-D printing a part might not be as accurate as other more conventional methods of machining parts, it is a much easier method to learn and has a much quicker turnaround time. For our choice of 3-D printer, we used the LulzBot Taz 6 \cite{Taz6} with a single extruder head (Version 2.1) and 2.65mm filament. This printer is readily available to us through the school the resolution of the printer was fine enough that it was easily able to achieve the tight tolerances that we needed to print parts such as the timing belt teeth.    
 
 %TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
 
@@ -306,6 +284,7 @@ Speed (RPM) & Torque (N-m) & Torque (in-lbf) & Current (A) & Pout (W) & Efficien
 \caption{HV5923MG Servo Motor}
 \label{fig:HV5923MG Servo Motor}
 \end{figure}
+
 
 \subsubsection{Arm Base}
 % Talk about requirements for base
