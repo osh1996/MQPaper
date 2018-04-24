@@ -475,6 +475,38 @@ Selecting a microcontroller was a key part of making the joint control board. Wi
 
 \noindent The potentiometer was connected to PE0 which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s.
 
+\subsubsection{Printed Circuit Boards}
+A PCB was made for each of the major subsystems as a more final test. The subsystems for which a PCB was designed include the motor driver (both with and without a current sensor), load cell amplifier, CAN transceiver, and TM4C123GH6PM microcontroller. After these were verified to be working, a Boosterpack compatible design of the whole joint control board.
+
+\noindent The motor driver PCB can be seen in Appendix \ref{app:motor_driver} and has the demultiplexer and a shunt resistor for triggering the automatic internal shutoff if the current gets too high. The motor driver with current sensor has a current sensor integrated in the board and can be seen in Appendix \ref{app:motor_driver_current}. The load cell amplifier has the LM358 op amp as well as the INA332 instrumentation amplifier and can be seen in Appendix \ref{app:load_cell_amp}. The CAN transceiver PCB was designed that contains the 6 necessary DIP switches, CAN transceiver, and auto-terminate circuit and can be seen in Appendix \ref{app:can_transceiver}. The joint control board Boosterpack has all of these components in a single PCB that mounts on top of the TM4C123GXL Launchpad and can be seen in Appendix \ref{app:joint_board_boosterpack}. All of these PCBs can be seen in Figure \ref{fig:pcbs}. A closeup of the joint control board Boosterpack attached to a Launchpad can be seen in Figure \ref{fig:jcb_boosterpack}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.1]{pcbs}
+	\caption{Assembled PCBs of each major subsystem including motor driver with current sensor (right), CAN transceiver (bottom), load cell amplifier (left), and joint control board Boosterpack (top)}
+	\label{fig:pcbs}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.1]{jcb_boosterpack}
+	\caption{Joint control board Boosterpack on the TM4C123GXL Launchpad}
+	\label{fig:jcb_boosterpack}
+\end{figure}
+
+\noindent Small problems existed in some of the PCBs during the first revision. The CAN transceiver PCB has the $V_{CC}$ and GND pins swapped. Once this problem was identified, the traces were cut, wire soldered, and the schematic altered for another revision. The load cell amplifier PCB has a GND pin that was not connected to anything. The GND pin on the INA332 amplifier had an unconnected ground pin. This pin was connected with wire, and the PCB worked as expected.
+
+\noindent The joint control board Boosterpack had the CAN transceiver $V_{CC}$ and GND pins swapped as well as needing the motor direction pin to be moved from one pin to another. This change came about due to the Launchpad construction. Two of the pins were connected internally but labeled differently, so the motor direction pin was swapped in code, the trace was cut, and wire was soldered to the new pin. These changes can be seen in Figure \ref{fig:jcb_boosterpack}. Another revision of the joint control board Boosterpack was made but not ordered due to time constraints.
+
+\subsubsection{Joint Control Board Code}
+%TODO: talk about RTOS, put flowchart, talk about CAN challenges
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.35]{jcb_code_flowchart}
+	\caption{Joint control board code flowchart}
+	\label{fig:jcb_code_flowchart}
+\end{figure}
+
 \subsection{CAN Bus}
 The CAN bus is the spine of the control system, carrying messages from the base to each joint and back from each of the joints to the base. Unit tests and careful integration were done to ensure that this tricky protocol was implemented properly and robustly while leaving room for future implementation of additional message types.
 
@@ -549,31 +581,24 @@ CAN specification states that the CAN bus needs to be terminated on both ends by
 	\label{fig:can_terminate_circ}
 \end{figure}
 
-\subsection{Printed Circuit Boards}
-A PCB was made for each of the major subsystems as a more final test. The subsystems for which a PCB was designed include the motor driver (both with and without a current sensor), load cell amplifier, CAN transceiver, and TM4C123GH6PM microcontroller. After these were verified to be working, a Boosterpack compatible design of the whole joint control board.
+\subsubsection{Position Updates}
+The control system supports up to 6 joints at a time. In order to have a constant transmission speed for every combination of joints up to and including 6 joints, 6 joint update packets are sent every update. When fewer than 6 joints are used, the remaining packets are transmitted but never received. This is one place where using the CAN bus helps, since these messages don't need to be received by a specific receiver. Only the ACK bit needs to be sent when no errors are detected with packet structure, but this can be sent by any received. 
 
-\noindent The motor driver PCB can be seen in Appendix \ref{app:motor_driver} and has the demultiplexer and a shunt resistor for triggering the automatic internal shutoff if the current gets too high. The motor driver with current sensor has a current sensor integrated in the board and can be seen in Appendix \ref{app:motor_driver_current}. The load cell amplifier has the LM358 op amp as well as the INA332 instrumentation amplifier and can be seen in Appendix \ref{app:load_cell_amp}. The CAN transceiver PCB was designed that contains the 6 necessary DIP switches, CAN transceiver, and auto-terminate circuit and can be seen in Appendix \ref{app:can_transceiver}. The joint control board Boosterpack has all of these components in a single PCB that mounts on top of the TM4C123GXL Launchpad and can be seen in Appendix \ref{app:joint_board_boosterpack}. All of these PCBs can be seen in Figure \ref{fig:pcbs}. A closeup of the joint control board Boosterpack attached to a Launchpad can be seen in Figure \ref{fig:jcb_boosterpack}.
+\noindent Since all 6 joints were being updated every time, the minimum update time is the time it takes to transmit 6 CAN packets. This time was measured to be about 0.8ms with a transmission speed of 500kHz using the logic analyzer and can be seen in Figure \ref{fig:can_joint_update}. The joint update and response were both sent at a rate of 20Hz, 50ms apart, and can be seen in figure \ref{fig:can_joint_update_response}.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.1]{pcbs}
-	\caption{Assembled PCBs of each major subsystem including motor driver with current sensor (right), CAN transceiver (bottom), load cell amplifier (left), and joint control board Boosterpack (top)}
-	\label{fig:pcbs}
+	\includegraphics[width=\textwidth]{CAN_Joint_Update}
+	\caption{Position update from the base module}
+	\label{fig:can_joint_update}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\includegraphics[scale=0.1]{jcb_boosterpack}
-\caption{Joint control board Boosterpack on the TM4C123GXL Launchpad}
-\label{fig:jcb_boosterpack}
+	\centering
+	\includegraphics[width=\textwidth]{CAN_Joint_Update_response}
+	\caption{Position update from the base module with response from a joint}
+	\label{fig:can_joint_update_response}
 \end{figure}
-
-\noindent Small problems existed in some of the PCBs during the first revision. The CAN transceiver PCB has the $V_{CC}$ and GND pins swapped. Once this problem was identified, the traces were cut, wire soldered, and the schematic altered for another revision. The load cell amplifier PCB has a GND pin that was not connected to anything. The GND pin on the INA332 amplifier had an unconnected ground pin. This pin was connected with wire, and the PCB worked as expected.
-
-\noindent The joint control board Boosterpack had the CAN transceiver $V_{CC}$ and GND pins swapped as well as needing the motor direction pin to be moved from one pin to another. This change came about due to the Launchpad construction. Two of the pins were connected internally but labeled differently, so the motor direction pin was swapped in code, the trace was cut, and wire was soldered to the new pin. These changes can be seen in Figure \ref{fig:jcb_boosterpack}. Another revision of the joint control board Boosterpack was made but not ordered due to time constraints.
-
-\subsubsection{Joint Control Board Code}
-%TODO: talk about RTOS, put flowchart, talk about CAN challenges
 
 \subsection{Base Module}
 %TODO: this section
