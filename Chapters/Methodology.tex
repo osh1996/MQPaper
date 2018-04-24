@@ -186,11 +186,46 @@ Selecting a microcontroller was a key part of making the joint control board. Wi
 
 \noindent As a temporary stand in for the AS5055 absolute Hall effect encoder to test the SSI peripheral, a MCP3202 12-bit, 2 channel ADC was used. Both devices use SPI to communicate their sensor data back to the MCU, and the packets are similar in structure. Some differences between the two that can be changed are a maximum sample rate for the AS5055 of ~1ms as opposed to the few SCLK cycle delays for the MCP3202. The AS5055 has a maximum SCLK frequency of up to 10MHz at 3.3V while the MCP3202 has a limit of 900kHz at 3.3V. 
 
-\noindent The potentiometer was connected to PB? which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s.
+
+\noindent The potentiometer was connected to PB2 which was enabled at AIN3. The ADC was set to sample at 1kHz with hardware oversampling 16x enabled. A timer was configured to start an ADC conversion every millisecond, and a GPIO pin was set to 0 every time the ADC finished a conversion and set to 1 when the ADC conversion began. The time necessary to sample once at 16x hardware oversampling was around 5$\mu$s.
+
+\begin{table}[H]
+	\centering
+	\caption{ADC Selection}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Part name & Supply Voltage (V) & Sampling rate (MHz) & SCLK Freq (MHz) & Price (\$) \\
+\hline
+ADS7042 & 3.3 & 1 & 16 & 2.65 \\
+
+ADS7043 & 3.3 & 1 & 16 & 2.65 \\
+
+ADS7044 & 3.3 & 1 & 16 & 2.65 \\
+
+ADC121S021 & 3.3, 5 & 0.2 & 4 & 2.85 \\
+
+ADC121S051 & 3.3, 5 & 0.5 & 4 & 3.31 \\
+
+ADC121S101 & 3.3, 5 & 1 & 4 & 3.39 \\
+
+ADC7476 & 3.3, 5 & 1 & 20 & 3.41 \\
+
+MCP3201 & 3.3, 5 & 0.1 & 1.6 & 2.31 \\
+
+MAX11665 & 3.3 & 0.5 & 8 & 2.73 \\
+\hline
+\end{tabular}
+
+\label{tbl:ADC Selection}
+\end{table}
+
+\noindent Note: The MCP3202 is functionally the same as the MCP3201, except it has a second input channel.
+
 
 \subsubsection{Hall Effect Encoder}
-An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly get get some functionality out a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
-
+An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder was functioning as we intended. Arduino makes rapid prototyping very easy by providing many libraries and a simple interface to quickly test a device without worrying about the board not functioning. Using the Arduino SPI library, the correct packets to send to the AS5055a were verified, along with the correct speed of both the SCLK and CS lines. The AS5055a datasheet specifies that the chip needs to receive a joint angle request at least every
+%TODO: Finish paragraph
 
 
 
@@ -298,7 +333,7 @@ The process of prototyping our fourth joint started with creating an interface s
 \noindent To create a prototype of our fourth joint, we determined the mechanical requirements of our arm and worked backwards to create a rapid prototyping model (RPM).  RPMs are usually CAD models which are able to be turned into a functional model using a 3-D printer. or other method.  Once the functional model was 3-D printed, we would assemble the parts and test how they all fit together.  With each new functional model we revised our RPM and printed a new functional model in order to meet the requirements for our fourth joint. This process of building, revising based on testing a physical prototype was only made possible due to the advances in recent years in 3-D printing technology making it feasible to create these prototypes so quickly while still having them be robust. 
 
 \subsubsection{3-D Printing}
-3-D printing is convenient because it allows the user to manufacture parts in a novel way. Overall, we chose to 3-D print our fourth joint because it was what we were most familiar with and we had easy access to multiple 3-D printers.  While the process of 3-D printing a part might not be as accurate as other more conventional methods of machining parts, it is a much easier method to learn and has a much quicker turnaround time. For our choice of 3-D printer, we used the LulzBot Taz 6 \cite{Taz6} with a single extruder head (Version 2.1) and 2.65mm filament. This printer is readily available to us through the school the resolution of the printer was fine enough that it was easily able to achieve the tight tolerances that we needed to print parts such as the timing belt teeth.    
+3-D printing is convenient because it allows the user to manufacture parts in a novel way. Overall, we chose to 3-D print our fourth joint because it was what we were most familiar with and we had easy access to multiple 3-D printers.  While the process of 3-D printing a part might not be as accurate as other more conventional methods of machining parts, it is a much easier method to learn and has a much quicker turnaround time. For our choice of 3-D printer, we used the LulzBot Taz 6 \cite{Taz6} with a single extruder head (Version 2.1) and 2.65mm filament. This printer is readily available to us through the school and the resolution of the printer was fine enough that it was easily able to achieve the tight tolerances that we needed to print parts such as the timing belt teeth.    
 
 %TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
 
@@ -370,7 +405,23 @@ Speed (RPM) & Torque (N-m) & Torque (in-lbf) & Current (A) & Pout (W) & Efficien
 % Talk about requirements for base
 % take in new joint data at certain speeds
 % output new joint data at certain speeds
-The mechanical side of the base module is relatively simple because the physical structure comes from the pre-existing arm. In order to make this compatible with our controls system, all we have to do is mount our joint and encoder boards to it.  This is fairly simple since we use a slightly modified version of the encoder board on the existing arm with the same mounting scheme. Our joint board mounting scheme focused around mounting each board in a place where it would not be impeded by the movement of the arm during runtime. Because we have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the same position for each category of joint type to keeps these needs consistent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solution.
+The mechanical side of the base module is relatively simple because the physical structure comes from the pre-existing arm. In order to make this compatible with our controls system, all we have to do is mount our joint and encoder boards to it. This is fairly simple since we use a slightly modified version of the encoder board on the existing arm with the same mounting scheme. Our joint board mounting scheme focused around mounting each board in a place where it would not be impeded by the movement of the arm during runtime. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{mount_back_view}
+	\caption{TM4C123G to arm mount}
+	\label{fig:mount_back_view}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{mount_and_holes}
+	\caption{Mounting holes on arm and mounted TM4C123G}
+	\label{fig:mount_and_holes}
+\end{figure}
+
+Because we have not only made sure that none of the mechanical components of the arm would come into contact with the board but also that none of the wiring between boards would be unplugged. This meant that we had to mount the boards far enough away from moving parts while still keeping it close enough to the sensors and motors that needed to interface with it. We decided to mount it in the same position for each category of joint type to keeps these needs consistent. Making use of an already existing area used to mount the cabling for the previous iteration of the arm seemed like the most efficient way to go about this. We designed a mechanical interface that was able to press-fit into our joint board and connect to the previous mounting solution.
 
 \subsection{Code Library}
 The code library is another important part of what we did to make our arm work. It controls all of the electrical components via the sending of packets out to the base module over a Serial UART line. It handle a lot of the more involved calculations for controlling the arm like the forward and inverse kinematics.  
