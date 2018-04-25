@@ -19,6 +19,7 @@
 \usepackage{titlesec}
 \usepackage[nomessages]{fp}
 \usepackage{pdfpages}
+\usepackage{chngcntr}
 % \usepackage[sorting=nyt,firstinits=true]{biblatex}
 \graphicspath{{./Pictures/}}
 
@@ -106,6 +107,7 @@ Craig Putnam \\
 \end{center}
 
 \normalsize
+\noindent \textit{A major qualifying project report	submitted to the faculty of	Worcester Polytechnic Institute	in partial fulfillment of the requirements for the	Degree of Bachelor of Science} \\
 \noindent \textit{This report represents the work of one or more WPI undergraduate students submitted to the faculty as evidence of completion of a degree requirement. WPI routinely publishes these reports on its web site without editorial or peer review}
 \end{titlepage}
 
@@ -140,6 +142,7 @@ Craig Putnam \\
 \begin{appendices}
 %\include{Appendices/Kit_Components}
 %\include{Appendices/GanttCharts}
+\counterwithin{figure}{section}
 \pagenumbering{arabic}% resets `page` counter to 1
 \renewcommand*{\thepage}{A\arabic{page}}
 \include{Appendices/Past_Work}
