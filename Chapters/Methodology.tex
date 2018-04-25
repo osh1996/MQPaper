@@ -1,9 +1,8 @@
 \section{Methodology}
-%todo: add introduction to methodology
 Many engineering decisions were made during the course of this project. Decisions as large as how any joints the arm would support, and as small as which type would be fitting for a certain variable. These decisions were all made in order to uphold the design goals of our project. 
 
 \subsection{System Design}
-%todo: methodology->system design
+The essential design of our project involved breaking a robot arm into modular joints and connecting each one to a CAN Bus. The CAN Bus is a very good communication protocol for implementation of multiple modular devices into one system. All of the joints would connect via the CAN Bus to one base module as picture in the figure below. This base acts as a translator, scheduler and power distribution system for the arm. It receives messages from the computer, translates them into CAN messages and sends them out at predefined times during the arm's configuration period and runtime. Finally, the base take in motor power, logic power and ground and connects each board so that it gets the power it needs. The computer is the main interface that our end user will interact with. It contains a GUI which takes input from the user, formulates packets and sends them to the base. The computer also has to read in data from the base to receive updates from the joints of the arm. In order to make sure that we were always dealing with the most up to date information, we decided that it would be best to store information about how each different joint is configured and its current status in a data container that gets accessed from both the communcations side and the user interface.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{system_coms_diagram}
@@ -79,8 +78,6 @@ The process of prototyping our fourth joint started with creating an interface s
 	\caption{CAD Model of 3D-printable Pulley}
 	\label{CAD Model of 3D-printable Pulley}
 \end{figure}
-
-%TODO: Those pretty calculations from Chris's notebook that show that the small part won't be crushed
 
 \subsubsection{Motor Selection}
 
@@ -177,7 +174,7 @@ The mechanical side of the base module is relatively simple because the physical
 
 
 \subsection{Joint Control Board}
-The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design. %todo FINISH THISS
+The joint control board sits at the heart of the entire functionality of the project. Without a robust and capable design, any arm constructed would not function properly. Selecting the types of sensors to use for the control board was a very important step of the joint control board design. The role of the joint board is a very flexible one. It is able to handle multiple different kinds of joints and integrate with the sensors on each joint. Therefore, it has to accomodate multiple different combinations of sensors and use them to control the arm. By making the joint board so robust, it is able to accomplish many different functions, making it perfect for our modular control system.
 
 \subsubsection{Overview of Design}
 The joint board underwent significant revisions, outlined in Section \ref{sec:pjcbd}, but the depth of revision significantly dropped after the decision was made to use the TM4C123GH6PM 32-bit ARM processor. This processor had many peripherals internally that simplified the joint board design significantly. A block diagram of the final joint control board can be seen in Figure \ref{fig:jcb_block_diagram}.
