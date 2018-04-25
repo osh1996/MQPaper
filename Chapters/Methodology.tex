@@ -444,8 +444,6 @@ An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder 
 
 \noindent In addition to the Arduino testing, tests were run with the TM4C123GH6PM and a test rig. The encoder test rig underwent significant revision to improve its reliability and accuracy in position the magnet above the hall effect sensor. The first iteration can be seen in Figure \ref{fig:First Iteration of Encoder Test Rig} and the second iteration can be seen in Figures \ref{fig:Second Iteration of Encoder Test Rig, Magnet View} and \ref{fig:Second Iteration of Encoder Test Rig, Side View}.
 
-\noindent One major problem encountered with the hall effect encoder was very noisy signals. Every so often, the encoder would read a value that was around 100 counts off of all the other values read in. This is most likely either an issue with magnet alignment or a noisy SPI line. In either case, this was largely solved in code with an 8-item circular buffer and exponential filter with alpha of 0.85. Using these two in conjunction with one another, these sporadic errors were largely evened out.
-
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.35]{encoderTestRig1}
@@ -466,6 +464,45 @@ An Arduino Uno was used to ensure that the AS5055a absolute Hall effect encoder 
 	\includegraphics[scale=0.06]{hallEffect2Top}
 	\caption{Second Iteration of Encoder Test Rig, Magnet View}
 	\label{fig:Second Iteration of Encoder Test Rig, Magnet View}
+\end{figure}
+
+\noindent One major problem encountered with the hall effect encoder was very noisy signals. Every so often, the encoder would read a value that was around 100 counts off of all the other values read in. This is most likely either an issue with magnet alignment or a noisy SPI line. In either case, this was largely solved in code with an 8-item circular buffer and exponential filter with alpha of 0.85. Using these two in conjunction with one another, these sporadic errors were largely evened out. The value 0.85 was decided on by testing the various values. 
+
+\noindent An alpha of 0.8 would very occasionally have erroneous readings and an alpha of 0.9 was very steady, but had a slightly delayed reaction time compared to an alpha of 0.8. An alpha of 0.85 was a compromise between steadiness and reaction time. All of the data was plotted and can be seen in Figures \ref{fig:constPosition_0_5}, \ref{fig:constPosition_0_6}, \ref{fig:constPosition_0_7}, \ref{fig:constPosition_0_8}, and \ref{fig:constPosition_0_9}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=1.1]{constPosition_0_5}
+	\caption{Behavior of the encoder value with alpha of 0.5}
+	\label{fig:constPosition_0_5}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1.1]{constPosition_0_6}
+\caption{Behavior of the encoder value with alpha of 0.6}
+\label{fig:constPosition_0_6}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1.1]{constPosition_0_7}
+\caption{Behavior of the encoder value with alpha of 0.7}
+\label{fig:constPosition_0_7}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1.1]{constPosition_0_8}
+\caption{Behavior of the encoder value with alpha of 0.8}
+\label{fig:constPosition_0_8}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1.1]{constPosition_0_9}
+\caption{Behavior of the encoder value with alpha of 0.9}
+\label{fig:constPosition_0_9}
 \end{figure}
 
 \subsubsection{TM4C123GXL Launchpad}
@@ -498,11 +535,11 @@ A PCB was made for each of the major subsystems as a more final test. The subsys
 
 \noindent Small problems existed in some of the PCBs during the first revision. The CAN transceiver PCB has the $V_{CC}$ and GND pins swapped. Once this problem was identified, the traces were cut, wire soldered, and the schematic altered for another revision. The load cell amplifier PCB has a GND pin that was not connected to anything. The GND pin on the INA332 amplifier had an unconnected ground pin. This pin was connected with wire, and the PCB worked as expected.
 
-\noindent The joint control board Boosterpack had the CAN transceiver $V_{CC}$ and GND pins swapped as well as needing the motor direction pin to be moved from one pin to another. This change came about due to the Launchpad construction. Two of the pins were connected internally but labeled differently, so the motor direction pin was swapped in code, the trace was cut, and wire was soldered to the new pin. These changes can be seen in Figure \ref{fig:jcb_boosterpack}. Another revision of the joint control board Boosterpack was made but not ordered due to time constraints.
+\noindent The joint control board Boosterpack had the CAN transceiver $V_{CC}$ and GND pins swapped as well as needing the motor direction pin to be moved from one pin to another. This change came about due to the Launchpad construction. Two of the pins were connected internally but labeled differently, so the motor direction pin was swapped in code, the trace was cut, and wire was soldered to the new pin. These changes can be seen in Figure \ref{fig:jcb_boosterpack}. Another revision of the joint control board Boosterpack was made but not ordered due to time constraints. A repository containing all of the altium files for these PCBs can be found in Appendix \ref{app:code_repo}.
 
 \subsubsection{Joint Control Board Code}
 %TODO: talk about RTOS, put flowchart, talk about CAN challenges
-The joint control board code uses TI's RTOS for TivaWare. The main reason for this decision was to gain access to the task synchronization that the RTOS provides to compartmentalize the code into different threads. A code flowchart can be seen in Figure \ref{fig:jcb_code_flowchart}. There are many threads running alongside one another, but they are all fairly separated in terms of their functionality. Each thread handles a single function, for example there is a thread for processing encoder data. This thread is released on a 1kHz software timer.
+The joint control board code uses TI's RTOS for TivaWare. The main reason for this decision was to gain access to the task synchronization that the RTOS provides to compartmentalize the code into different threads. A code flowchart can be seen in Figure \ref{fig:jcb_code_flowchart}. There are many threads running alongside one another, but they are all fairly separated in terms of their functionality. Each thread handles a single function, for example there is a thread for processing encoder data. This thread is released on a 1kHz software timer. The code repository can containing this code as well as a repository containing testing code can be found in Appendix \ref{app:code_repo}.
 
 \begin{figure}[H]
 	\centering
@@ -619,7 +656,7 @@ The base module is pretty simple from a hardware standpoint. It mostly consists 
 \subsubsection{Base Module Code}
 The base module is also running TI RTOS for TivaWare boards. The main reason for this was to multithread the code to simplify programming. By having multiple threads, the code can be compartmentalized into sections that handle different parts. Figure \ref{fig:base_code_flowchart} shows the code flowchart. There are two main states, initialization and runtime. During initialization, all of the constants for each joint are loaded in. These include CAN ID, encoder offset, and PID constants. Once all 6 joints have been initialized, the code transmits that information on the CAN bus and switches into the runtime state. 
 
-\noindent In the runtime state, the base module reads in joint angle updates from the computer, then sends them along to the corresponding joint. The joints then send back their actual joint angle, which is parsed back into serial and sent to the computer.
+\noindent In the runtime state, the base module reads in joint angle updates from the computer, then sends them along to the corresponding joint. The joints then send back their actual joint angle, which is parsed back into serial and sent to the computer. The code repository containing all of this code can be found in Appendix \ref{app:code_repo}.
 
 \begin{figure}[H]
 	\centering
@@ -643,7 +680,7 @@ Arm structure is not something we wanted to fully define, since the end user is 
 
 
 \subsection{Software Application}
-The code library is another important part of what we did to make our arm work. It controls all of the electrical components via the sending of packets out to the base module over a Serial UART line. It handle a lot of the more involved calculations for controlling the arm like the forward and inverse kinematics.  
+The code library is another important part of what we did to make our arm work. It controls all of the electrical components via the sending of packets out to the base module over a Serial UART line. It handle a lot of the more involved calculations for controlling the arm like the forward and inverse kinematics. The repository containing all of the software code can be found in Appendix \ref{app:code_repo}.
 
 
 \subsubsection{Maven}
